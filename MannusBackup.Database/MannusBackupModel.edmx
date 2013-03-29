@@ -1,0 +1,234 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="MannusBackupDatabaseModel.Store" Alias="Self" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.1" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="MannusBackupDatabaseModelStoreContainer">
+          <EntitySet Name="backup_profileproperties" EntityType="MannusBackupDatabaseModel.Store.backup_profileproperties" store:Type="Tables" Schema="mannusnl" />
+          <EntitySet Name="backup_profiles" EntityType="MannusBackupDatabaseModel.Store.backup_profiles" store:Type="Tables" store:Schema="mannusnl" store:Name="backup_profiles">
+            <DefiningQuery>SELECT
+      `backup_profiles`.`id`, 
+      `backup_profiles`.`userid`, 
+      `backup_profiles`.`type`
+      FROM `backup_profiles` AS `backup_profiles`</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="backup_results" EntityType="MannusBackupDatabaseModel.Store.backup_results" store:Type="Tables" Schema="mannusnl" />
+          <EntitySet Name="backup_users" EntityType="MannusBackupDatabaseModel.Store.backup_users" store:Type="Tables" Schema="mannusnl" />
+        </EntityContainer>
+        <EntityType Name="backup_profileproperties">
+          <Key>
+            <PropertyRef Name="naam" />
+            <PropertyRef Name="profileid" />
+          </Key>
+          <Property Name="naam" Type="varchar" Nullable="false" MaxLength="150" />
+          <Property Name="profileid" Type="int" Nullable="false" />
+          <Property Name="waarde" Type="varchar" Nullable="false" MaxLength="150" />
+        </EntityType>
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'mannusnl.backup_profiles' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      warning 6035: The relationship 'FK_backup_profileproperties' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
+      -->
+        <EntityType Name="backup_profiles">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="userid" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="userid" Type="int" Nullable="false" />
+          <Property Name="type" Type="enum" />
+        </EntityType>
+        <EntityType Name="backup_results">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="datum" Type="date" Nullable="false" />
+          <Property Name="host" Type="varchar" Nullable="false" MaxLength="150" />
+          <Property Name="tijd" Type="time" Nullable="false" />
+          <Property Name="status" Type="varchar" Nullable="false" MaxLength="150" />
+          <Property Name="naam" Type="varchar" Nullable="false" MaxLength="250" />
+          <Property Name="password" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="size" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="sizeingb" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <!--Errors Found During Generation:
+      warning 6035: The relationship 'FK_backup_profiles' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
+      -->
+        <EntityType Name="backup_users">
+          <Key>
+            <PropertyRef Name="username" />
+          </Key>
+          <Property Name="username" Type="varchar" Nullable="false" MaxLength="150" />
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+        </EntityType>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MannusBackupDatabaseModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="MannusBackupEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="backup_results" EntityType="MannusBackupDatabaseModel.Result" />
+          <EntitySet Name="backup_profileproperties" EntityType="MannusBackupDatabaseModel.ProfileProperty" />
+          <EntitySet Name="backup_profiles" EntityType="MannusBackupDatabaseModel.Profile" />
+          <EntitySet Name="backup_users" EntityType="MannusBackupDatabaseModel.User" />
+          <AssociationSet Name="UserProfile" Association="MannusBackupDatabaseModel.UserProfile">
+            <End Role="User" EntitySet="backup_users" />
+            <End Role="Profile" EntitySet="backup_profiles" />
+          </AssociationSet>
+          <AssociationSet Name="ProfileProfileProperty" Association="MannusBackupDatabaseModel.ProfileProfileProperty">
+            <End Role="Profile" EntitySet="backup_profiles" />
+            <End Role="ProfileProperty" EntitySet="backup_profileproperties" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Result">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="datum" Type="DateTime" Nullable="false" />
+          <Property Name="host" Type="String" Nullable="false" MaxLength="150" Unicode="false" FixedLength="false" />
+          <Property Name="tijd" Type="Time" Nullable="false" />
+          <Property Name="status" Type="String" Nullable="false" MaxLength="150" Unicode="false" FixedLength="false" />
+          <Property Name="naam" Type="String" Nullable="false" MaxLength="250" Unicode="false" FixedLength="false" />
+          <Property Name="password" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
+          <Property Name="size" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
+          <Property Name="sizeingb" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="ProfileProperty">
+          <Key>
+            <PropertyRef Name="Name" />
+            <PropertyRef Name="ProfileId" />
+          </Key>
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="ProfileId" Nullable="false" />
+          <Property Type="String" Name="Value" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Profile" Relationship="MannusBackupDatabaseModel.ProfileProfileProperty" FromRole="ProfileProperty" ToRole="Profile" />
+          <Property Type="String" Name="Userid" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Profile">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="UserId" Nullable="false" />
+          <Property Type="String" Name="ProfileType" MaxLength="65532" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="User" Relationship="MannusBackupDatabaseModel.UserProfile" FromRole="Profile" ToRole="User" />
+          <Property Type="String" Name="UserUserName" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ProfileProperties" Relationship="MannusBackupDatabaseModel.ProfileProfileProperty" FromRole="Profile" ToRole="ProfileProperty" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserName" />
+          </Key>
+          <Property Type="String" Name="UserName" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Profiles" Relationship="MannusBackupDatabaseModel.UserProfile" FromRole="User" ToRole="Profile" />
+        </EntityType>
+        <Association Name="UserProfile">
+          <End Type="MannusBackupDatabaseModel.User" Role="User" Multiplicity="1" />
+          <End Type="MannusBackupDatabaseModel.Profile" Role="Profile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserName" />
+            </Principal>
+            <Dependent Role="Profile">
+              <PropertyRef Name="UserUserName" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ProfileProfileProperty">
+          <End Type="MannusBackupDatabaseModel.Profile" Role="Profile" Multiplicity="1" />
+          <End Type="MannusBackupDatabaseModel.ProfileProperty" Role="ProfileProperty" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Profile">
+              <PropertyRef Name="Id" />
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="ProfileProperty">
+              <PropertyRef Name="ProfileId" />
+              <PropertyRef Name="Userid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="MannusBackupDatabaseModelStoreContainer" CdmEntityContainer="MannusBackupEntities">
+          <EntitySetMapping Name="backup_results"><EntityTypeMapping TypeName="MannusBackupDatabaseModel.Result"><MappingFragment StoreEntitySet="backup_results">
+            <ScalarProperty Name="id" ColumnName="id" />
+            <ScalarProperty Name="datum" ColumnName="datum" />
+            <ScalarProperty Name="host" ColumnName="host" />
+            <ScalarProperty Name="tijd" ColumnName="tijd" />
+            <ScalarProperty Name="status" ColumnName="status" />
+            <ScalarProperty Name="naam" ColumnName="naam" />
+            <ScalarProperty Name="password" ColumnName="password" />
+            <ScalarProperty Name="size" ColumnName="size" />
+            <ScalarProperty Name="sizeingb" ColumnName="sizeingb" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="backup_profileproperties">
+            <EntityTypeMapping TypeName="MannusBackupDatabaseModel.ProfileProperty">
+              <MappingFragment StoreEntitySet="backup_profileproperties">
+                <ScalarProperty Name="Value" ColumnName="waarde" />
+                <ScalarProperty Name="ProfileId" ColumnName="profileid" />
+                <ScalarProperty Name="Name" ColumnName="naam" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="backup_profiles">
+            <EntityTypeMapping TypeName="MannusBackupDatabaseModel.Profile">
+              <MappingFragment StoreEntitySet="backup_profiles">
+                <ScalarProperty Name="ProfileType" ColumnName="type" />
+                <ScalarProperty Name="UserId" ColumnName="userid" />
+                <ScalarProperty Name="Id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="backup_users">
+            <EntityTypeMapping TypeName="MannusBackupDatabaseModel.User">
+              <MappingFragment StoreEntitySet="backup_users">
+                <ScalarProperty Name="Id" ColumnName="id" />
+                <ScalarProperty Name="UserName" ColumnName="username" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams>
+      <Diagram Name="MannusBackupModel">
+        <EntityTypeShape EntityType="MannusBackupDatabaseModel.Result" Width="1.5" PointX="0.75" PointY="0.75" Height="2.7494921874999996" IsExpanded="true" />
+        <EntityTypeShape EntityType="MannusBackupDatabaseModel.ProfileProperty" Width="1.5" PointX="8.625" PointY="1.375" Height="1.9802864583333339" />
+        <EntityTypeShape EntityType="MannusBackupDatabaseModel.Profile" Width="1.5" PointX="5.875" PointY="1.25" Height="1.9802864583333339" IsExpanded="true" />
+        <EntityTypeShape EntityType="MannusBackupDatabaseModel.User" Width="1.5" PointX="3.625" PointY="1.375" Height="1.4033821614583331" IsExpanded="true" />
+        <AssociationConnector Association="MannusBackupDatabaseModel.UserProfile">
+          <ConnectorPoint PointX="5.125" PointY="2.172841796875" />
+          <ConnectorPoint PointX="5.875" PointY="2.172841796875" />
+        </AssociationConnector>
+        <AssociationConnector Association="MannusBackupDatabaseModel.ProfileProfileProperty">
+          <ConnectorPoint PointX="7.375" PointY="2.3651432291666667" />
+          <ConnectorPoint PointX="8.625" PointY="2.3651432291666667" />
+        </AssociationConnector>
+      </Diagram>
+    </Diagrams>
+  </Designer>
+</edmx:Edmx>
