@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{38685251-EA23-4C95-8B81-62F37DF6A0EE}"
 	ProjectSection(SolutionItems) = preProject
 		LocalTestRun.testrunconfig = LocalTestRun.testrunconfig
@@ -22,7 +22,7 @@ EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "MannusBackupWebservice", "MannusBackupWebservice\", "{F2C66489-66D3-4B42-8A3F-B09EB65C9CE9}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
-		ProjectReferences = "{B33E9EEA-7C69-45B3-9CD1-EFB02153A905}|MannusBackup.dll;"
+		ProjectReferences = "{B33E9EEA-7C69-45B3-9CD1-EFB02153A905}|MannusBackup.dll;{5709C3D7-9381-48F0-BB5B-297FF067804C}|MannusBackup.Database.dll;{D6359F76-7810-4024-8045-287D9D026C0E}|MannusBackup.Interfaces.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/MannusBackupWebservice"
 		Debug.AspNetCompiler.PhysicalPath = "MannusBackupWebservice\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\MannusBackupWebservice\"
@@ -44,6 +44,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MannusBackup.Database", "MannusBackup.Database\MannusBackup.Database.csproj", "{5709C3D7-9381-48F0-BB5B-297FF067804C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MannusBackup.Database.UnitTests", "MannusBackup.Database.UnitTests\MannusBackup.Database.UnitTests.csproj", "{A4F6C40F-5561-4338-AE0E-156D5623B64A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MannusBackup.Interfaces", "MannusBackup.Interfaces\MannusBackup.Interfaces.csproj", "{D6359F76-7810-4024-8045-287D9D026C0E}"
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
@@ -148,6 +150,16 @@ Global
 		{A4F6C40F-5561-4338-AE0E-156D5623B64A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{A4F6C40F-5561-4338-AE0E-156D5623B64A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{A4F6C40F-5561-4338-AE0E-156D5623B64A}.Release|x86.ActiveCfg = Release|Any CPU
+		{D6359F76-7810-4024-8045-287D9D026C0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6359F76-7810-4024-8045-287D9D026C0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6359F76-7810-4024-8045-287D9D026C0E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{D6359F76-7810-4024-8045-287D9D026C0E}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{D6359F76-7810-4024-8045-287D9D026C0E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D6359F76-7810-4024-8045-287D9D026C0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6359F76-7810-4024-8045-287D9D026C0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6359F76-7810-4024-8045-287D9D026C0E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{D6359F76-7810-4024-8045-287D9D026C0E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{D6359F76-7810-4024-8045-287D9D026C0E}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

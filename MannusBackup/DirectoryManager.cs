@@ -1,13 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using ESRINederland.Framework.Logging;
 using MannusBackup.Configuration;
 using MannusBackup.Tasks;
-
+using System.Linq;  
 namespace MannusBackup
 {
+    // TODO: directory manager zo refacteren dat we verschillende managers hebben, 1 voor lokaal, 1 voor usb-harde schijven, 1 voor cloud, 1 voor ftp
     public class DirectoryManager
     {
+
         public static void CreateBaseDirectory()
         {
             DirectoryInfo directory = new DirectoryInfo(MannusBackupConfiguration.BackupDirectory);
@@ -74,5 +77,6 @@ namespace MannusBackup
         {
             return GetTaskDirectory(taskType, string.Empty);
         }
+
     }
 }

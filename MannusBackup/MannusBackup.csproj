@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MannusBackup</RootNamespace>
     <AssemblyName>MannusBackup</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -41,6 +41,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -49,6 +50,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ESRINederland.Framework">
@@ -120,6 +122,7 @@
     <Compile Include="BackupResults\BackupResultsWriter.cs" />
     <Compile Include="MessageMailer.cs" />
     <Compile Include="Outlook\ArchiveBackupPreparer.cs" />
+    <Compile Include="Storage\LocalStorageManager.cs" />
     <Compile Include="TaskFinishedEventArgs.cs" />
     <Compile Include="Tasks\BackupTask.cs" />
     <Compile Include="Configuration\ExclusionElement.cs" />
@@ -176,6 +179,16 @@
   <ItemGroup>
     <Folder Include="Service\" />
     <Folder Include="Webservice\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MannusBackup.Database\MannusBackup.Database.csproj">
+      <Project>{5709c3d7-9381-48f0-bb5b-297ff067804c}</Project>
+      <Name>MannusBackup.Database</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MannusBackup.Interfaces\MannusBackup.Interfaces.csproj">
+      <Project>{d6359f76-7810-4024-8045-287d9d026c0e}</Project>
+      <Name>MannusBackup.Interfaces</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -92,6 +92,7 @@ namespace MannusBackup
 			}
 		}
 
+		[Obsolete("deze functie komt nu ook voor in de directorymanager")]
 		private SortedList<DateTime, DirectoryInfo> GetBackupDirectories(string directory)
 		{
 			_logger.LogDebug("get backup directories from {0}", directory);

@@ -15,6 +15,7 @@ using MannusBackup.Tasks;
 using MannusBackup.Tasks.Tasks;
 using MySql.Data.MySqlClient;
 using MannusBackup.Mail;
+using MannusBackup.Storage;
 
 namespace MannusBackup
 {
@@ -41,6 +42,14 @@ namespace MannusBackup
 
         public void Backup()
         {
+            var repository = new Repository();
+            // TODO property ook in MannusConfiguration plaatsen
+            // TODO profile ID uit configuratie halen
+            var profile = repository.All<Profile>().Where(p => p.Id == 2).First();
+            // TODO extension maken op Profile zodat we snel een specifieke property er uit kunnen halen en kunnen casten
+            var numberOfBackups = int.Parse(profile.Properties.Where(p => p.Name.Equals("NumberOfLocalBackups")).First().Value);
+            var localStorage = new LocalStorageManager();
+            localStorage.DeleteBackupDirectories(numberOfBackups);
             logger.LogDebug("create base directory");
             try
             {

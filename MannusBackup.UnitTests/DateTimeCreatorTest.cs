@@ -34,7 +34,14 @@ namespace MannusBackup.UnitTests
             Assert.AreEqual(expected, result);
         }
 
-
+        [TestMethod]
+      public void FromDateStamp_With_Value_Backup_Laptop_01april2013()
+        {
+            string directoryName = "backup_laptop_01April2013";
+            var result = _dateCreator.FromDateStamp(directoryName, false);
+            DateTime expected = new DateTime(2013, 4, 01);
+            Assert.AreEqual(expected, result);
+        }
         [TestMethod]
         public void FromDateStamp_And_Directory_Not_From_Base_With_Invalid_Date_Returns_1_1_1900()
         {

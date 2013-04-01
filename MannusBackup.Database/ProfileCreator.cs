@@ -2,34 +2,30 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using MannusBackup.Interfaces;
 
 namespace MannusBackup.Database
 {
     public class ProfileCreator
     {
-        private MannusEntities _db;
+        private IRepository _repository;
+
         public ProfileCreator()
         {
-            _db = new MannusEntities();
+            _repository = new Repository();
         }
-
 
         public void CreateProfile(EnumProfileType profileType)
         {
             var profile = CreateNewClientProfile();
-//            user.Profiles.
- //           user.Profiles.Add(profile);
-  //          user.
-//            _db.AddTobackup_users(user);
-            _db.backup_profile.Add(profile);
-            _db.SaveChanges();
+            _repository.Create<Profile>(profile);
+            _repository.SaveChanges();
         }
 
         private Profile CreateNewClientProfile()
         {
             var profile = new Profile();
             profile.ProfileType = EnumProfileType.Client.ToString();
-
             // TODO: toevoegen van alle properties
             var prop1 = new ProfileProperty();
             prop1.Name = "NumberOfLocalBackups";
