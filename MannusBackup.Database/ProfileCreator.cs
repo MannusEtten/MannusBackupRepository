@@ -7,20 +7,22 @@ namespace MannusBackup.Database
 {
     public class ProfileCreator
     {
-        private MannusBackupEntities _db;
-
+        private MannusEntities _db;
         public ProfileCreator()
         {
-            _db = new MannusBackupEntities();
+            _db = new MannusEntities();
         }
 
 
-        public void CreateProfile(User user, EnumProfileType profileType)
+        public void CreateProfile(EnumProfileType profileType)
         {
-//            var profile = CreateNewClientProfile();
-//            user.Profiles.Add(profile);
+            var profile = CreateNewClientProfile();
+//            user.Profiles.
+ //           user.Profiles.Add(profile);
+  //          user.
 //            _db.AddTobackup_users(user);
-//            _db.SaveChanges();
+            _db.backup_profile.Add(profile);
+            _db.SaveChanges();
         }
 
         private Profile CreateNewClientProfile()
@@ -32,8 +34,7 @@ namespace MannusBackup.Database
             var prop1 = new ProfileProperty();
             prop1.Name = "NumberOfLocalBackups";
             prop1.Value = "5";
-
-            profile.ProfileProperties.Add(prop1);
+            profile.Properties.Add(prop1);
             return profile;
         }
     }

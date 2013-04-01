@@ -20,7 +20,7 @@ namespace MannusBackup.Database.UnitTests
         [TestMethod]
         public void CreateUser()
         {
-            _userCreator.CreateUser("UnitTest");
+//            _userCreator.CreateUser("UnitTest");
         }
     }
 }

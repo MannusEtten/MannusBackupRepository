@@ -3,7 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{38685251-EA23-4C95-8B81-62F37DF6A0EE}"
 	ProjectSection(SolutionItems) = preProject
-		database.txt = database.txt
 		LocalTestRun.testrunconfig = LocalTestRun.testrunconfig
 		MannusBackup.vsmdi = MannusBackup.vsmdi
 	EndProjectSection
@@ -20,7 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OutLookBackupPrepareTool", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MannusBackupFtpIndexer", "MannusBackupFtpIndexer\MannusBackupFtpIndexer.csproj", "{80D0F29D-BE1E-4408-8977-A2ACEB537638}"
 EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "MannusBackupWebservice", "MannusBackupWebservice", "{F2C66489-66D3-4B42-8A3F-B09EB65C9CE9}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "MannusBackupWebservice", "MannusBackupWebservice\", "{F2C66489-66D3-4B42-8A3F-B09EB65C9CE9}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
 		ProjectReferences = "{B33E9EEA-7C69-45B3-9CD1-EFB02153A905}|MannusBackup.dll;"
