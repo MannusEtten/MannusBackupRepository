@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="1960b912b4264c399db0f50d5b599ce3" Name="Diagram1">
+        <EntityTypeShape EntityType="MannusBackupModel.Profile" Width="1.5" PointX="0.75" PointY="10.25" />
+        <EntityTypeShape EntityType="MannusBackupModel.ProfileProperty" Width="1.5" PointX="3.625" PointY="10.25" />
+        <EntityTypeShape EntityType="MannusBackupModel.backup_results" Width="1.5" PointX="7.25" PointY="9.875" />
+        <AssociationConnector Association="MannusBackupModel.FK_backup_profileproperty" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

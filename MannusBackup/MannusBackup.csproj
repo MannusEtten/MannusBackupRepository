@@ -123,6 +123,7 @@
     <Compile Include="MessageMailer.cs" />
     <Compile Include="Outlook\ArchiveBackupPreparer.cs" />
     <Compile Include="Storage\LocalStorageManager.cs" />
+    <Compile Include="Storage\StorageLocation.cs" />
     <Compile Include="TaskFinishedEventArgs.cs" />
     <Compile Include="Tasks\BackupTask.cs" />
     <Compile Include="Configuration\ExclusionElement.cs" />

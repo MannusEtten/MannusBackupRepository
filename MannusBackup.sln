@@ -2,10 +2,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{38685251-EA23-4C95-8B81-62F37DF6A0EE}"
-	ProjectSection(SolutionItems) = preProject
-		LocalTestRun.testrunconfig = LocalTestRun.testrunconfig
-		MannusBackup.vsmdi = MannusBackup.vsmdi
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MannusBackupApplication", "MannusBackupApplication\MannusBackupApplication.csproj", "{899DCA51-30B3-4261-927E-134D501CE166}"
 EndProject
@@ -48,9 +44,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MannusBackup.Interfaces", "MannusBackup.Interfaces\MannusBackup.Interfaces.csproj", "{D6359F76-7810-4024-8045-287D9D026C0E}"
 EndProject
 Global
-	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = MannusBackup.vsmdi
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms

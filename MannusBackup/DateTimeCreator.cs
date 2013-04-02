@@ -2,17 +2,19 @@
 using System.Globalization;
 using ESRINederland.Framework.Logging;
 using MannusBackup.Entities;
+using MannusBackup.Storage;
 
 namespace MannusBackup
 {
     internal class DateTimeCreator
     {
         private ILogger _logger;
+        private StorageLocation _storageLocation;
 
-        public DateTimeCreator()
+        public DateTimeCreator(StorageLocation location = StorageLocation.Usb)
         {
             _logger = Logger.GetLogger();
-
+            _storageLocation = location;
         }
 
         internal DateTime FromDateStamp(string subDirName, bool directoryFromBase = false)
@@ -62,6 +64,32 @@ namespace MannusBackup
 
         private DateDefinition ParseDirectoryNameToDateDefinitionWithoutBaseDirectory(string directoryName)
         {
+            switch (_storageLocation)
+            {
+                case StorageLocation.Usb:
+                    return ParseDirectoryNameToDateDefinitionWithoutBaseDirectoryForUsb(directoryName);
+            case StorageLocation.Local:
+                    return ParseDirectoryNameToDateDefinitionWithoutBaseDirectoryForLocal(directoryName);
+            }
+            return new DateDefinition() { Day = "1", Month = "1", Year = "1900" };   
+        }
+
+        private DateDefinition ParseDirectoryNameToDateDefinitionWithoutBaseDirectoryForUsb(string directoryName)
+        {
+                    DateDefinition result = new DateDefinition();
+                    if (directoryName.Length < 9)
+                    {
+                        return result;
+                    }
+                    result.Day = directoryName.Substring(0, 2);
+                    result.Month = directoryName.Substring(2, directoryName.Length - 6);
+                    result.Year = directoryName.Substring(directoryName.Length - 4);
+                    return result;
+        }
+
+        private DateDefinition ParseDirectoryNameToDateDefinitionWithoutBaseDirectoryForLocal(string directoryName)
+        {
+            // TODO 02042013 fixen
             DateDefinition result = new DateDefinition();
             if (directoryName.Length < 9)
             {
@@ -71,7 +99,7 @@ namespace MannusBackup
             result.Month = directoryName.Substring(2, directoryName.Length - 6);
             result.Year = directoryName.Substring(directoryName.Length - 4);
             return result;
-
         }
+
     }
 }

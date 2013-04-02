@@ -1,4 +1,5 @@
 ﻿using System;
+using MannusBackup.Storage;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MannusBackup.UnitTests
@@ -38,6 +39,7 @@ namespace MannusBackup.UnitTests
       public void FromDateStamp_With_Value_Backup_Laptop_01april2013()
         {
             string directoryName = "backup_laptop_01April2013";
+            _dateCreator = new DateTimeCreator(StorageLocation.Local);
             var result = _dateCreator.FromDateStamp(directoryName, false);
             DateTime expected = new DateTime(2013, 4, 01);
             Assert.AreEqual(expected, result);
