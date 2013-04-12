@@ -25,7 +25,7 @@ namespace MannusBackup
         private ILogger logger;
         public event EventHandler<TaskFinishedEventArgs> TaskIsFinished;
         public event EventHandler<BackupFinishedEventArgs> BackupIsFinished;
-
+    
         internal List<IBackupTask> Tasks { get; private set; }
 
         public BackupNew()

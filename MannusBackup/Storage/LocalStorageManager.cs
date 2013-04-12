@@ -17,7 +17,7 @@ namespace MannusBackup.Storage
         /// <returns></returns>
         public SortedList<DateTime, DirectoryInfo> GetBackupDirectories(string directory)
         {
-            DateTimeCreator dateTimeCreator = new DateTimeCreator();
+            DateTimeCreator dateTimeCreator = new DateTimeCreator(StorageLocation.Local);
             DirectoryInfo backupDirectories = new DirectoryInfo(directory);
             SortedList<DateTime, DirectoryInfo> backupDirectoriesNames = new SortedList<DateTime, DirectoryInfo>();
             foreach (DirectoryInfo subdir in backupDirectories.GetDirectories())
@@ -26,6 +26,7 @@ namespace MannusBackup.Storage
                 DateTime dateStamp = dateTimeCreator.FromDateStamp(subDirName);
                 if (!dateStamp.Year.Equals(1900))
                 {
+                    var fullDirectoryName = Path.Combine(MannusBackupConfiguration.GetConfig().BaseBackupDirectory, subDirName);
                     backupDirectoriesNames.Add(dateStamp, subdir);
                 }
             }
@@ -44,7 +45,7 @@ namespace MannusBackup.Storage
             {
                 var directoriesToStay = backupDirectoriesSortedByDate.Take(numberOfBackups);
                 var directoriesToDelete = backupDirectoriesSortedByDate.Except(directoriesToStay);
-                directoriesToDelete.ToList().ForEach(d => Directory.Delete(d.Value.Name));
+                directoriesToDelete.ToList().ForEach(d => d.Value.Delete(true));
             }
         }
     }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Globalization;
+using System.IO;
 using ESRINederland.Framework.Logging;
+using MannusBackup.Configuration;
 using MannusBackup.Entities;
 using MannusBackup.Storage;
 
@@ -95,9 +97,15 @@ namespace MannusBackup
             {
                 return result;
             }
-            result.Day = directoryName.Substring(0, 2);
-            result.Month = directoryName.Substring(2, directoryName.Length - 6);
-            result.Year = directoryName.Substring(directoryName.Length - 4);
+            string baseDirectory = MannusBackupConfiguration.GetConfig().BaseBackupDirectory;
+            string prefix = MannusBackupConfiguration.GetConfig().HostName;
+            var baseDirectoryWithoutDriveLetter = Path.GetDirectoryName(baseDirectory);
+            var directoryNameWithoutDate = baseDirectory.Replace(baseDirectoryWithoutDriveLetter, string.Empty);
+            directoryNameWithoutDate = string.Format("{0}_{1}_",directoryNameWithoutDate,prefix);
+            var datePart = directoryName.Replace(directoryNameWithoutDate, string.Empty);
+            result.Day = datePart.Substring(0, 2);
+            result.Month = datePart.Substring(2, datePart.Length - 6);
+            result.Year = datePart.Substring(datePart.Length - 4);
             return result;
         }
 

@@ -10,7 +10,7 @@ namespace MannusBackup.UnitTests
         [TestMethod]
         public void Backup_Is_Succesfull()
         {
-            Assert.Inconclusive();
+//            Assert.Inconclusive();
             BackupNew backuper = new BackupNew();
             backuper.Backup();
         }

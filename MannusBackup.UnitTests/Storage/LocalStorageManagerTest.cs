@@ -24,7 +24,7 @@ namespace MannusBackup.UnitTests
             var baseDirectory = MannusBackupConfiguration.GetConfig().BaseBackupDirectory;
             DirectoryManager.CreateBaseDirectory();
            var count = _localStorageManager.GetBackupDirectories(baseDirectory).Count;
-            Assert.AreEqual(1, count);
+            Assert.AreNotEqual(0, count);
         }
 
         [TestMethod]

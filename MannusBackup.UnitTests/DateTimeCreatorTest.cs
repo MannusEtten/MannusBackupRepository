@@ -63,16 +63,16 @@ namespace MannusBackup.UnitTests
         [TestMethod]
         public void FromDateStamp_And_DirectoryName_Has_Invalid_Day_Base_Is_False_Returns_1_1_1900()
         {
-            FromDateStamp_Expect_1_1_1900("32May2012", false);
+            TestDateStamp("32May2012", false);
         }
 
         [TestMethod]
         public void FromDateStamp_And_DirectoryName_Has_Invalid_Day_Base_Is_True_Returns_1_1_1900()
         {
-            FromDateStamp_Expect_1_1_1900("32May2012", true);
+            TestDateStamp("32May2012", true);
         }
 
-        private void FromDateStamp_Expect_1_1_1900(string date, bool fromBase)
+        private void TestDateStamp(string date, bool fromBase)
         {
             var result = _dateCreator.FromDateStamp(date, fromBase);
             Assert.AreEqual(_defaultDate, result);
