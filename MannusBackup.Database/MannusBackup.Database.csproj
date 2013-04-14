@@ -62,6 +62,7 @@
       <DependentUpon>MannusBackupEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="ConfigurationPropertyCreator.cs" />
+    <Compile Include="ConfigurationPropertyPartial.cs" />
     <Compile Include="CreatorBase.cs" />
     <Compile Include="EnumProfileType.cs" />
     <Compile Include="MannusBackupEntities.Context.cs">
@@ -85,6 +86,7 @@
     <Compile Include="ProfileConfiguration.cs">
       <DependentUpon>MannusBackupEntities.tt</DependentUpon>
     </Compile>
+    <Compile Include="ProfileConfigurationPartial.cs" />
     <Compile Include="ProfileCreator.cs" />
     <Compile Include="ProfileProperty.cs">
       <DependentUpon>MannusBackupEntities.tt</DependentUpon>

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Data.Entity.Infrastructure;
 using System.Web;
 using System.Web.DynamicData;
 using System.Web.Routing;
 using System.Web.UI;
+using MannusBackup.Database;
 
 namespace MannusBackupWebsite
 {
@@ -29,13 +31,13 @@ namespace MannusBackupWebsite
             // Note: Make sure that you change "YourDataContextType" to the name of the data context
             // class in your application.
             // See http://go.microsoft.com/fwlink/?LinkId=257395 for more information on how to register Entity Data Model with Dynamic Data            
-            // DefaultModel.RegisterContext(() =>
-            // {
-            //    return ((IObjectContextAdapter)new YourDataContextType()).ObjectContext;
-            // }, new ContextConfiguration() { ScaffoldAllTables = false });
+            DefaultModel.RegisterContext(() =>
+             {
+                return ((IObjectContextAdapter)new MannusEntities()).ObjectContext;
+            }, new ContextConfiguration() { ScaffoldAllTables = false });
 
             // The following registration should be used if YourDataContextType does not derive from DbContext
-            // DefaultModel.RegisterContext(typeof(YourDataContextType), new ContextConfiguration() { ScaffoldAllTables = false });
+            // DefaultModel.RegisterContext(typeof(MannusEntities ), new ContextConfiguration() { ScaffoldAllTables = false });
 
             // The following statement supports separate-page mode, where the List, Detail, Insert, and 
             // Update tasks are performed by using separate pages. To enable this mode, uncomment the following 
