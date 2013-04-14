@@ -5,10 +5,14 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="1960b912b4264c399db0f50d5b599ce3" Name="Diagram1">
-        <EntityTypeShape EntityType="MannusBackupModel.Profile" Width="1.5" PointX="0.75" PointY="10.25" />
-        <EntityTypeShape EntityType="MannusBackupModel.ProfileProperty" Width="1.5" PointX="3.625" PointY="10.25" />
-        <EntityTypeShape EntityType="MannusBackupModel.backup_results" Width="1.5" PointX="7.25" PointY="9.875" />
+        <EntityTypeShape EntityType="MannusBackupModel.Profile" Width="1.5" PointX="1" PointY="9.875" />
+        <EntityTypeShape EntityType="MannusBackupModel.ProfileProperty" Width="1.5" PointX="4" PointY="9.875" />
+        <EntityTypeShape EntityType="MannusBackupModel.backup_results" Width="1.5" PointX="6.875" PointY="9" />
         <AssociationConnector Association="MannusBackupModel.FK_backup_profileproperty" />
+        <EntityTypeShape EntityType="MannusBackupModel.ConfigurationProperty" Width="2.125" PointX="1" PointY="4.25" />
+        <EntityTypeShape EntityType="MannusBackupModel.ProfileConfiguration" Width="2.25" PointX="0.875" PointY="6.625" />
+        <AssociationConnector Association="MannusBackupModel.FK_configurationproperty_to_configuration" />
+        <AssociationConnector Association="MannusBackupModel.FK_configurationproperty_to_profile" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

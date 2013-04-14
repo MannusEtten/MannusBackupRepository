@@ -43,6 +43,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MannusBackup.Database.UnitT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MannusBackup.Interfaces", "MannusBackup.Interfaces\MannusBackup.Interfaces.csproj", "{D6359F76-7810-4024-8045-287D9D026C0E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MannusBackupWebsite", "MannusBackupWebsite\MannusBackupWebsite.csproj", "{43A69D8A-DB69-4799-8223-409C129F717C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -153,6 +155,16 @@ Global
 		{D6359F76-7810-4024-8045-287D9D026C0E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{D6359F76-7810-4024-8045-287D9D026C0E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{D6359F76-7810-4024-8045-287D9D026C0E}.Release|x86.ActiveCfg = Release|Any CPU
+		{43A69D8A-DB69-4799-8223-409C129F717C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43A69D8A-DB69-4799-8223-409C129F717C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43A69D8A-DB69-4799-8223-409C129F717C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{43A69D8A-DB69-4799-8223-409C129F717C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{43A69D8A-DB69-4799-8223-409C129F717C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{43A69D8A-DB69-4799-8223-409C129F717C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43A69D8A-DB69-4799-8223-409C129F717C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43A69D8A-DB69-4799-8223-409C129F717C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{43A69D8A-DB69-4799-8223-409C129F717C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{43A69D8A-DB69-4799-8223-409C129F717C}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

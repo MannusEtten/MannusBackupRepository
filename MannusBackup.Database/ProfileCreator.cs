@@ -6,15 +6,8 @@ using MannusBackup.Interfaces;
 
 namespace MannusBackup.Database
 {
-    public class ProfileCreator
+    public class ProfileCreator : CreatorBase
     {
-        private IRepository _repository;
-
-        public ProfileCreator()
-        {
-            _repository = new Repository();
-        }
-
         public void CreateProfile(EnumProfileType profileType)
         {
             var profile = CreateNewClientProfile();

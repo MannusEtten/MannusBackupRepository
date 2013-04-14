@@ -58,6 +58,11 @@
     <Compile Include="backup_results.cs">
       <DependentUpon>MannusBackupEntities.tt</DependentUpon>
     </Compile>
+    <Compile Include="ConfigurationProperty.cs">
+      <DependentUpon>MannusBackupEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ConfigurationPropertyCreator.cs" />
+    <Compile Include="CreatorBase.cs" />
     <Compile Include="EnumProfileType.cs" />
     <Compile Include="MannusBackupEntities.Context.cs">
       <AutoGen>True</AutoGen>
@@ -75,6 +80,9 @@
       <DependentUpon>MannusBackupEntities.edmx</DependentUpon>
     </Compile>
     <Compile Include="Profile.cs">
+      <DependentUpon>MannusBackupEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProfileConfiguration.cs">
       <DependentUpon>MannusBackupEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="ProfileCreator.cs" />
