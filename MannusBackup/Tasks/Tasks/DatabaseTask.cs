@@ -3,21 +3,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MannusBackup.Configuration;
+using MannusBackup.Database;
 using MannusBackup.Tasks.Database;
 
 namespace MannusBackup.Tasks
 {
-    internal class DatabaseTask<T> : TaskBase where T : MannusBackupElement, new() 
+    internal class DatabaseTask : TaskBase 
     {
-        public DatabaseTask() : base(TaskType.Database) {}
+        private ProfileProperty _profileProperty;
+        private ProfileConfiguration _profileConfiguration;
+
+        public DatabaseTask(ProfileConfiguration profileConfiguration, ProfileProperty sqlYogProperty) : base(TaskType.Database)
+        {
+            _profileProperty = sqlYogProperty;
+            _profileConfiguration = profileConfiguration;
+        }
 
         protected override void Execute()
         {
-            DatabaseElement configuration = Configuration as DatabaseElement;
-            Console.WriteLine("backup database " + configuration.Key + " " + configuration.UserName);
-            SetTaskDirectory(configuration.Key);
-            DatabaseDumper dumper = new DatabaseDumper(configuration, TaskDirectory);
-            dumper.DumpDatabaseToFile();
+            Console.WriteLine("backup database " + _profileConfiguration.Name);
+            SqlYogDatabaseTask databaseTask = new SqlYogDatabaseTask(_profileConfiguration, _profileProperty);
+            databaseTask.DumpDatabaseToFile();
         }
     }
 }

@@ -205,8 +205,8 @@
           <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Type="Int32" Name="configurationid" Nullable="false" />
           <Property Type="Int32" Name="profileid" Nullable="false" />
-          <Property Type="String" Name="naam" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="waarde" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Value" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="backup_configuration" Relationship="MannusBackupModel.FK_configurationproperty_to_configuration" FromRole="backup_profile_configuration" ToRole="backup_configuration" />
           <NavigationProperty Name="backup_profile" Relationship="MannusBackupModel.FK_configurationproperty_to_profile" FromRole="backup_profile_configuration" ToRole="Profile" />
         </EntityType>
@@ -288,8 +288,8 @@
           <EntitySetMapping Name="backup_profile_configuration">
             <EntityTypeMapping TypeName="MannusBackupModel.ProfileConfiguration">
               <MappingFragment StoreEntitySet="backup_profile_configuration">
-                <ScalarProperty Name="waarde" ColumnName="waarde" />
-                <ScalarProperty Name="naam" ColumnName="naam" />
+                <ScalarProperty Name="Value" ColumnName="waarde" />
+                <ScalarProperty Name="Name" ColumnName="naam" />
                 <ScalarProperty Name="profileid" ColumnName="profileid" />
                 <ScalarProperty Name="configurationid" ColumnName="configurationid" />
                 <ScalarProperty Name="id" ColumnName="id" />

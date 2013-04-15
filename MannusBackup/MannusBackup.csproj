@@ -133,6 +133,7 @@
     <Compile Include="Configuration\DirectoryElement.cs" />
     <Compile Include="Configuration\FtpSiteElement.cs" />
     <Compile Include="Tasks\Database\DatabaseDumper.cs" />
+    <Compile Include="Tasks\Database\SqlYogDatabaseTask.cs" />
     <Compile Include="Tasks\GoogleDocs\DuplicateFilesAndDirectoryRemover.cs" />
     <Compile Include="Tasks\Tasks\DatabaseTask.cs" />
     <Compile Include="Tasks\EnumTaskStatus.cs" />

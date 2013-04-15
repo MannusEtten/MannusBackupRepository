@@ -16,15 +16,18 @@ using MannusBackup.Tasks.Tasks;
 using MySql.Data.MySqlClient;
 using MannusBackup.Mail;
 using MannusBackup.Storage;
+using MannusBackup.Interfaces;
 
 namespace MannusBackup
 {
     public class BackupNew
     {
         private int finishedTasks = 0;
+        private Repository _repository;
         private ILogger logger;
         public event EventHandler<TaskFinishedEventArgs> TaskIsFinished;
         public event EventHandler<BackupFinishedEventArgs> BackupIsFinished;
+        private Profile _profile;
     
         internal List<IBackupTask> Tasks { get; private set; }
 
@@ -32,6 +35,10 @@ namespace MannusBackup
         {
             logger = Logger.GetLogger();
             Tasks = new List<IBackupTask>();
+            _repository = new Repository();
+            // TODO property ook in MannusConfiguration plaatsen
+            // TODO profile ID uit configuratie halen
+            _profile = _repository.All<Profile>().Where(p => p.Id == 2).First();
         }
 
         public void PrepareBackupOutlookArchives()
@@ -42,12 +49,8 @@ namespace MannusBackup
 
         public void Backup()
         {
-            var repository = new Repository();
-            // TODO property ook in MannusConfiguration plaatsen
-            // TODO profile ID uit configuratie halen
-            var profile = repository.All<Profile>().Where(p => p.Id == 2).First();
             // TODO extension maken op Profile zodat we snel een specifieke property er uit kunnen halen en kunnen casten
-            var numberOfBackups = int.Parse(profile.Properties.Where(p => p.Name.Equals("NumberOfLocalBackups")).First().Value);
+            var numberOfBackups = int.Parse(_profile.Properties.Where(p => p.Name.Equals("NumberOfLocalBackups")).First().Value);
             var localStorage = new LocalStorageManager();
             localStorage.DeleteBackupDirectories(numberOfBackups);
             logger.LogDebug("create base directory");
@@ -150,16 +153,26 @@ namespace MannusBackup
             //            BackupTask<GoogleElement, GoogleDocsTask<GoogleElement>> googleDocsTask = new BackupTask<GoogleElement, GoogleDocsTask<GoogleElement>>(googleDocsConfiguration, "GoogleDocs");
             GenericConfigurationElementCollection<FtpSiteElement> ftpSites = MannusBackupConfiguration.GetConfig().FtpSites;
             BackupTask<FtpSiteElement, WebsitesTask<FtpSiteElement>> task = new BackupTask<FtpSiteElement, WebsitesTask<FtpSiteElement>>(ftpSites, "Websites");
-            GenericConfigurationElementCollection<DatabaseElement> databases = MannusBackupConfiguration.GetConfig().Databases;
-            foreach (DatabaseElement database in databases)
-            {
-                string name = string.Format("Database - {0}", database.Key);
-                BackupTask<DatabaseElement, DatabaseTask<DatabaseElement>> databaseTask = new BackupTask<DatabaseElement, DatabaseTask<DatabaseElement>>(database, name);
-                Tasks.Add(databaseTask as IBackupTask);
-            }
+
+            AddDatabaseTasks();
+            //! TODO: tasks aanmaken vanuit een andere class
+
             //            Tasks.Add(googleDocsTask as IBackupTask);
             Tasks.Add(task as IBackupTask);
             Tasks.Add(task3 as IBackupTask);
+        }
+
+        internal void AddDatabaseTasks()
+        {
+            var sqlYogProfileProperty = _profile.Properties.Where(p => p.Name.Equals(ProfileProperties.SqlYog.ToString())).First();
+            var sqlYogConfigurationProperty = _repository.All<ConfigurationProperty>().Where(p => p.Name.Equals(ProfileProperties.SqlYog.ToString())).First();
+            var sqlYogDatabaseConfigurations = _profile.Configuration.Where(p => p.configurationid == sqlYogConfigurationProperty.id);
+            foreach (var configuration in sqlYogDatabaseConfigurations)
+            {
+                DatabaseTask databaseTask = new DatabaseTask(configuration, sqlYogProfileProperty);
+                Tasks.Add(databaseTask as IBackupTask);
+                //!+ databasetask is nu niet meer multithreaded, BackupTask moet aangepast worden
+            }
         }
 
         private string CreateMessage(List<string> messages)

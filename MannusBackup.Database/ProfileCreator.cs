@@ -23,7 +23,11 @@ namespace MannusBackup.Database
             var prop1 = new ProfileProperty();
             prop1.Name = "NumberOfLocalBackups";
             prop1.Value = "5";
+            var prop2 = new ProfileProperty();
+            prop2.Name = "SqlYog";
+            prop2.Value = @"C:\Program Files (x86)\SQLyog\SJA.exe";
             profile.Properties.Add(prop1);
+            profile.Properties.Add(prop2);
             return profile;
         }
     }
