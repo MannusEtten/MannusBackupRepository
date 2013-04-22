@@ -169,3 +169,5 @@ MannusBackup.Database/MannusBackupEntities.Designer.cs
 MannusBackup.Database/Profile.cs
 MannusBackup.Database/ProfileType.cs
 MannusBackup.Database/ProfileProperty.cs
+
+/MannusBackup.Database/MannusBackup.Database.csproj.user
