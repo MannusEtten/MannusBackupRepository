@@ -52,8 +52,8 @@
   <ItemGroup>
     <Compile Include="BackupCopierTest.cs" />
     <Compile Include="BackupNewTest.cs" />
-    <Compile Include="BackupResults\BackupResultsDatabaseHandlerTest.cs" />
-    <Compile Include="BackupResults\BackupResultsXmlFileHandlerTest.cs" />
+    <Compile Include="MannusBackupResults\BackupResultsDatabaseHandlerTest.cs" />
+    <Compile Include="MannusBackupResults\BackupResultsXmlFileHandlerTest.cs" />
     <Compile Include="Database\MySQLStarterTest.cs" />
     <Compile Include="DateTimeCreatorTest.cs" />
     <Compile Include="DiskSpaceCheckerTest.cs" />
@@ -64,7 +64,7 @@
     <Compile Include="Configuration\MannusBackupFtpIndexerConfigurationTest.cs" />
     <Compile Include="PasswordGeneratorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="BackupResults\BackupResultsWriterTest.cs" />
+    <Compile Include="MannusBackupResults\BackupResultsWriterTest.cs" />
     <Compile Include="TaskFinishedEventArgsTest.cs" />
     <Compile Include="Tasks\XCopyTaskTest.cs" />
     <Compile Include="Tasks\ZipTaskTest.cs" />

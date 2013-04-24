@@ -161,13 +161,4 @@ pip-log.txt
 
 # Mac crap
 .DS_Store
-MannusBackup.Database/backup_results.cs
-MannusBackup.Database/MannusBackupEntities.Context.cs
-MannusBackup.Database/MannusBackupEntities.Context.tt
-MannusBackup.Database/MannusBackupEntities.cs
-MannusBackup.Database/MannusBackupEntities.Designer.cs
-MannusBackup.Database/Profile.cs
-MannusBackup.Database/ProfileType.cs
-MannusBackup.Database/ProfileProperty.cs
-
 /MannusBackup.Database/MannusBackup.Database.csproj.user
