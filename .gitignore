@@ -43,6 +43,7 @@ local.properties
 
 # Build results
 [Dd]ebug/
+*.pdb
 [Rr]elease/
 *_i.c
 *_p.c
@@ -112,6 +113,8 @@ Generated_Code #added for RIA/Silverlight projects
 # Visual Studio version. Backup files are not needed, because we have git ;-)
 _UpgradeReport_Files/
 Backup*/
+Bin*/
+Builder*/
 UpgradeLog*.XML
 
 
@@ -162,3 +165,5 @@ pip-log.txt
 # Mac crap
 .DS_Store
 /MannusBackup.Database/MannusBackup.Database.csproj.user
+
+MannusBackupWebservice/Bin/MannusBackup.Database.pdb
