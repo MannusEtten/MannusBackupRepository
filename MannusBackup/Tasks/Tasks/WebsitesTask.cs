@@ -8,7 +8,7 @@ using System.Net;
 
 namespace MannusBackup.Tasks
 {
-    internal class WebsitesTask<T> : TaskBase where T : MannusBackupElement, new() 
+    internal class WebsitesTask<T> : OldTaskBase where T : MannusBackupElement, new() 
     {
         private Uri ftpUrl { get; set; }
         private NetworkCredential credentials { get; set; }

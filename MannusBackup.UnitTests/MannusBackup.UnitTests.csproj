@@ -66,6 +66,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MannusBackupResults\BackupResultsWriterTest.cs" />
     <Compile Include="TaskFinishedEventArgsTest.cs" />
+    <Compile Include="Tasks\DatabaseTaskTest.cs" />
     <Compile Include="Tasks\XCopyTaskTest.cs" />
     <Compile Include="Tasks\ZipTaskTest.cs" />
     <Compile Include="Storage\LocalStorageManagerTest.cs" />
@@ -77,6 +78,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MannusBackup.Database\MannusBackup.Database.csproj">
+      <Project>{5709c3d7-9381-48f0-bb5b-297ff067804c}</Project>
+      <Name>MannusBackup.Database</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MannusBackup.Interfaces\MannusBackup.Interfaces.csproj">
+      <Project>{d6359f76-7810-4024-8045-287d9d026c0e}</Project>
+      <Name>MannusBackup.Interfaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MannusBackup\MannusBackup.csproj">
       <Project>{B33E9EEA-7C69-45B3-9CD1-EFB02153A905}</Project>
       <Name>MannusBackup</Name>

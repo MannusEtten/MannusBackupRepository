@@ -1,7 +1,7 @@
 ﻿using System;
 using ESRINederland.Framework.Logging;
 
-namespace MannusBackup
+namespace MannusBackup.Interfaces
 {
     public class BackupFinishedEventArgs : EventArgs
     {

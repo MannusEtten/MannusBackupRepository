@@ -12,14 +12,22 @@ namespace MannusBackup.Tasks.Database
     internal class SqlYogDatabaseTask
     {
         private ProfileConfiguration _configuration;
-        private ProfileProperty _profileProperty;
         private ILogger _logger;
+        private ProfileProperty _profileProperty;
 
         internal SqlYogDatabaseTask(ProfileConfiguration configuration, ProfileProperty sqlYogProfileProperty)
         {
             _logger = Logger.GetLogger();
             _configuration = configuration;
             _profileProperty = sqlYogProfileProperty;
+        }
+
+        private string BatchFileArguments
+        {
+            get
+            {
+                return string.Format("{0}", _configuration.Value);
+            }
         }
 
         internal void DumpDatabaseToFile()
@@ -41,14 +49,6 @@ namespace MannusBackup.Tasks.Database
             catch (Exception e)
             {
                 _logger.LogError(e.Message);
-            }
-        }
-
-        private string BatchFileArguments
-        {
-            get
-            {
-                return string.Format("{0}", _configuration.Value);
             }
         }
     }

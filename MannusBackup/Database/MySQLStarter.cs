@@ -1,20 +1,22 @@
 ﻿using System;
 using System.ServiceProcess;
 using ESRINederland.Framework.Logging;
+using MannusBackup.Interfaces;
 
 namespace MannusBackup.Database
 {
     internal class MySQLStarter
     {
-        private string _serviceName;
         private ILogger _logger;
-        public event EventHandler<TaskFinishedEventArgs> TaskIsFinished;
+        private string _serviceName;
 
         public MySQLStarter(string serviceName)
         {
             _serviceName = serviceName;
             _logger = Logger.GetLogger();
         }
+
+        public event EventHandler<TaskFinishedEventArgs> TaskIsFinished;
 
         public void StartDatabase()
         {

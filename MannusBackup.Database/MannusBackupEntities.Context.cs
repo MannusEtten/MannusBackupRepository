@@ -25,10 +25,10 @@ namespace MannusBackup.Database
             throw new UnintentionalCodeFirstException();
         }
     
+        public DbSet<ConfigurationProperty> backup_configuration { get; set; }
         public DbSet<Profile> backup_profile { get; set; }
+        public DbSet<ProfileConfiguration> backup_profile_configuration { get; set; }
         public DbSet<ProfileProperty> backup_profileproperty { get; set; }
         public DbSet<backup_results> backup_results { get; set; }
-        public DbSet<ConfigurationProperty> backup_configuration { get; set; }
-        public DbSet<ProfileConfiguration> backup_profile_configuration { get; set; }
     }
 }

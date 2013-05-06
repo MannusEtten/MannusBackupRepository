@@ -6,11 +6,11 @@
     <edmx:StorageModels>
     <Schema Namespace="MannusBackupModel.Store" Alias="Self" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.1" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityContainer Name="MannusBackupModelStoreContainer">
-          <EntitySet Name="backup_configuration" EntityType="MannusBackupModel.Store.backup_configuration" store:Type="Tables" Schema="mannusnl" />
-          <EntitySet Name="backup_profile" EntityType="MannusBackupModel.Store.backup_profile" store:Type="Tables" Schema="mannusnl" />
-          <EntitySet Name="backup_profile_configuration" EntityType="MannusBackupModel.Store.backup_profile_configuration" store:Type="Tables" Schema="mannusnl" />
-          <EntitySet Name="backup_profileproperty" EntityType="MannusBackupModel.Store.backup_profileproperty" store:Type="Tables" Schema="mannusnl" />
-          <EntitySet Name="backup_results" EntityType="MannusBackupModel.Store.backup_results" store:Type="Tables" Schema="mannusnl" />
+          <EntitySet Name="backup_configuration" EntityType="MannusBackupModel.Store.backup_configuration" store:Type="Tables" Schema="mannus_backup" />
+          <EntitySet Name="backup_profile" EntityType="MannusBackupModel.Store.backup_profile" store:Type="Tables" Schema="mannus_backup" />
+          <EntitySet Name="backup_profile_configuration" EntityType="MannusBackupModel.Store.backup_profile_configuration" store:Type="Tables" Schema="mannus_backup" />
+          <EntitySet Name="backup_profileproperty" EntityType="MannusBackupModel.Store.backup_profileproperty" store:Type="Tables" Schema="mannus_backup" />
+          <EntitySet Name="backup_results" EntityType="MannusBackupModel.Store.backup_results" store:Type="Tables" Schema="mannus_backup" />
           <AssociationSet Name="FK_backup_profileproperty" Association="MannusBackupModel.Store.FK_backup_profileproperty">
             <End Role="backup_profile" EntitySet="backup_profile" />
             <End Role="backup_profileproperty" EntitySet="backup_profileproperty" />
@@ -118,21 +118,21 @@
     <edmx:ConceptualModels>
       <Schema Namespace="MannusBackupModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="MannusEntities" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="backup_configuration" EntityType="MannusBackupModel.ConfigurationProperty" />
           <EntitySet Name="backup_profile" EntityType="MannusBackupModel.Profile" />
+          <EntitySet Name="backup_profile_configuration" EntityType="MannusBackupModel.ProfileConfiguration" />
           <EntitySet Name="backup_profileproperty" EntityType="MannusBackupModel.ProfileProperty" />
           <EntitySet Name="backup_results" EntityType="MannusBackupModel.backup_results" />
-          <AssociationSet Name="FK_backup_profileproperty" Association="MannusBackupModel.FK_backup_profileproperty">
-            <End Role="Profile" EntitySet="backup_profile" />
-            <End Role="ProfileProperty" EntitySet="backup_profileproperty" />
-          </AssociationSet>
-          <EntitySet Name="backup_configuration" EntityType="MannusBackupModel.ConfigurationProperty" />
-          <EntitySet Name="backup_profile_configuration" EntityType="MannusBackupModel.ProfileConfiguration" />
           <AssociationSet Name="FK_configurationproperty_to_configuration" Association="MannusBackupModel.FK_configurationproperty_to_configuration">
             <End Role="backup_configuration" EntitySet="backup_configuration" />
             <End Role="backup_profile_configuration" EntitySet="backup_profile_configuration" />
           </AssociationSet>
+          <AssociationSet Name="FK_backup_profileproperty" Association="MannusBackupModel.FK_backup_profileproperty">
+            <End Role="backup_profile" EntitySet="backup_profile" />
+            <End Role="backup_profileproperty" EntitySet="backup_profileproperty" />
+          </AssociationSet>
           <AssociationSet Name="FK_configurationproperty_to_profile" Association="MannusBackupModel.FK_configurationproperty_to_profile">
-            <End Role="Profile" EntitySet="backup_profile" />
+            <End Role="backup_profile" EntitySet="backup_profile" />
             <End Role="backup_profile_configuration" EntitySet="backup_profile_configuration" />
           </AssociationSet>
         </EntityContainer>
@@ -143,53 +143,6 @@
           <Member Name="FlickrStorage" />
           <Member Name="CloudStorage" />
         </EnumType>
-        <EntityType Name="Profile">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <NavigationProperty Name="Properties" Relationship="MannusBackupModel.FK_backup_profileproperty" FromRole="Profile" ToRole="ProfileProperty" />
-          <Property Type="String" Name="ProfileType" Nullable="false" />
-          <NavigationProperty Name="Configuration" Relationship="MannusBackupModel.FK_configurationproperty_to_profile" FromRole="Profile" ToRole="backup_profile_configuration" />
-        </EntityType>
-        <EntityType Name="ProfileProperty">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="String" Name="Name" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="Value" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Type="Int32" Name="profileid" Nullable="false" />
-          <NavigationProperty Name="backup_profile" Relationship="MannusBackupModel.FK_backup_profileproperty" FromRole="ProfileProperty" ToRole="Profile" />
-        </EntityType>
-        <EntityType Name="backup_results">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="DateTime" Name="datum" Nullable="false" Precision="0" />
-          <Property Type="String" Name="host" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
-          <Property Type="Time" Name="tijd" Nullable="false" Precision="0" />
-          <Property Type="String" Name="status" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="naam" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="password" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="size" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="sizeingb" MaxLength="50" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <Association Name="FK_backup_profileproperty">
-          <End Type="MannusBackupModel.Profile" Role="Profile" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="MannusBackupModel.ProfileProperty" Role="ProfileProperty" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Profile">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ProfileProperty">
-              <PropertyRef Name="profileid" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="ConfigurationProperty">
           <Key>
             <PropertyRef Name="id" />
@@ -197,6 +150,15 @@
           <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Type="String" Name="Name" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="backup_profile_configuration" Relationship="MannusBackupModel.FK_configurationproperty_to_configuration" FromRole="backup_configuration" ToRole="backup_profile_configuration" />
+        </EntityType>
+        <EntityType Name="Profile">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="ProfileType" MaxLength="65532" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Properties" Relationship="MannusBackupModel.FK_backup_profileproperty" FromRole="backup_profile" ToRole="backup_profileproperty" />
+          <NavigationProperty Name="Configuration" Relationship="MannusBackupModel.FK_configurationproperty_to_profile" FromRole="backup_profile" ToRole="backup_profile_configuration" />
         </EntityType>
         <EntityType Name="ProfileConfiguration">
           <Key>
@@ -208,7 +170,31 @@
           <Property Type="String" Name="Name" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="Value" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="backup_configuration" Relationship="MannusBackupModel.FK_configurationproperty_to_configuration" FromRole="backup_profile_configuration" ToRole="backup_configuration" />
-          <NavigationProperty Name="backup_profile" Relationship="MannusBackupModel.FK_configurationproperty_to_profile" FromRole="backup_profile_configuration" ToRole="Profile" />
+          <NavigationProperty Name="backup_profile" Relationship="MannusBackupModel.FK_configurationproperty_to_profile" FromRole="backup_profile_configuration" ToRole="backup_profile" />
+        </EntityType>
+        <EntityType Name="ProfileProperty">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Value" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="profileid" Nullable="false" />
+          <NavigationProperty Name="backup_profile" Relationship="MannusBackupModel.FK_backup_profileproperty" FromRole="backup_profileproperty" ToRole="backup_profile" />
+        </EntityType>
+        <EntityType Name="backup_results">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="DateTime" Name="datum" Nullable="false" />
+          <Property Type="String" Name="host" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Type="Time" Name="tijd" Nullable="false" />
+          <Property Type="String" Name="status" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="naam" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="password" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="size" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="sizeingb" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_configurationproperty_to_configuration">
           <End Type="MannusBackupModel.ConfigurationProperty" Role="backup_configuration" Multiplicity="1">
@@ -224,13 +210,27 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_backup_profileproperty">
+          <End Type="MannusBackupModel.Profile" Role="backup_profile" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="MannusBackupModel.ProfileProperty" Role="backup_profileproperty" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="backup_profile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="backup_profileproperty">
+              <PropertyRef Name="profileid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_configurationproperty_to_profile">
-          <End Type="MannusBackupModel.Profile" Role="Profile" Multiplicity="1">
+          <End Type="MannusBackupModel.Profile" Role="backup_profile" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
           <End Type="MannusBackupModel.ProfileConfiguration" Role="backup_profile_configuration" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Profile">
+            <Principal Role="backup_profile">
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="backup_profile_configuration">
@@ -238,17 +238,36 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
     <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
   <EntityContainerMapping StorageEntityContainer="MannusBackupModelStoreContainer" CdmEntityContainer="MannusEntities">
-    <EntitySetMapping Name="backup_profile">
+          <EntitySetMapping Name="backup_configuration">
+            <EntityTypeMapping TypeName="MannusBackupModel.ConfigurationProperty">
+              <MappingFragment StoreEntitySet="backup_configuration">
+                <ScalarProperty Name="Name" ColumnName="naam" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="backup_profile">
             <EntityTypeMapping TypeName="MannusBackupModel.Profile">
               <MappingFragment StoreEntitySet="backup_profile">
                 <ScalarProperty Name="ProfileType" ColumnName="type" />
                 <ScalarProperty Name="Id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="backup_profile_configuration">
+            <EntityTypeMapping TypeName="MannusBackupModel.ProfileConfiguration">
+              <MappingFragment StoreEntitySet="backup_profile_configuration">
+                <ScalarProperty Name="Value" ColumnName="waarde" />
+                <ScalarProperty Name="Name" ColumnName="naam" />
+                <ScalarProperty Name="profileid" ColumnName="profileid" />
+                <ScalarProperty Name="configurationid" ColumnName="configurationid" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -258,7 +277,7 @@
                 <ScalarProperty Name="profileid" ColumnName="profileid" />
                 <ScalarProperty Name="Value" ColumnName="waarde" />
                 <ScalarProperty Name="Name" ColumnName="naam" />
-                <ScalarProperty Name="Id" ColumnName="id" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -273,25 +292,6 @@
                 <ScalarProperty Name="tijd" ColumnName="tijd" />
                 <ScalarProperty Name="host" ColumnName="host" />
                 <ScalarProperty Name="datum" ColumnName="datum" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="backup_configuration">
-            <EntityTypeMapping TypeName="MannusBackupModel.ConfigurationProperty">
-              <MappingFragment StoreEntitySet="backup_configuration">
-                <ScalarProperty Name="Name" ColumnName="naam" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="backup_profile_configuration">
-            <EntityTypeMapping TypeName="MannusBackupModel.ProfileConfiguration">
-              <MappingFragment StoreEntitySet="backup_profile_configuration">
-                <ScalarProperty Name="Value" ColumnName="waarde" />
-                <ScalarProperty Name="Name" ColumnName="naam" />
-                <ScalarProperty Name="profileid" ColumnName="profileid" />
-                <ScalarProperty Name="configurationid" ColumnName="configurationid" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>

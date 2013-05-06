@@ -10,26 +10,22 @@ using ESRINederland.Framework.Logging;
 using MannusBackup.BackupResults;
 using MannusBackup.Configuration;
 using MannusBackup.Database;
+using MannusBackup.Interfaces;
+using MannusBackup.Mail;
 using MannusBackup.Outlook;
+using MannusBackup.Storage;
 using MannusBackup.Tasks;
 using MannusBackup.Tasks.Tasks;
 using MySql.Data.MySqlClient;
-using MannusBackup.Mail;
-using MannusBackup.Storage;
-using MannusBackup.Interfaces;
 
 namespace MannusBackup
 {
     public class BackupNew
     {
-        private int finishedTasks = 0;
-        private Repository _repository;
-        private ILogger logger;
-        public event EventHandler<TaskFinishedEventArgs> TaskIsFinished;
-        public event EventHandler<BackupFinishedEventArgs> BackupIsFinished;
         private Profile _profile;
-    
-        internal List<IBackupTask> Tasks { get; private set; }
+        private Repository _repository;
+        private int finishedTasks = 0;
+        private ILogger logger;
 
         public BackupNew()
         {
@@ -41,11 +37,11 @@ namespace MannusBackup
             _profile = _repository.All<Profile>().Where(p => p.Id == 2).First();
         }
 
-        public void PrepareBackupOutlookArchives()
-        {
-            ArchiveBackupPreparer preparer = new ArchiveBackupPreparer();
-            preparer.PrepareBackupMailArchives();
-        }
+        public event EventHandler<BackupFinishedEventArgs> BackupIsFinished;
+
+        public event EventHandler<TaskFinishedEventArgs> TaskIsFinished;
+
+        internal List<IBackupTask> Tasks { get; private set; }
 
         public void Backup()
         {
@@ -73,11 +69,113 @@ namespace MannusBackup
             ExecuteAllTasks();
         }
 
-        private void ExecuteAllTasks()
+        public void Cleanup()
         {
-            logger.LogDebug("execute all tasks");
-            Tasks.ForEach(t => t.TaskIsFinished += new EventHandler<TaskFinishedEventArgs>(TaskIsFinishedHandler));
-            Tasks.ForEach(t => t.ExecuteBackupTask());
+            logger.LogDebug("clean the base directory");
+            DirectoryManager.DeleteBaseDirectory();
+            DeleteEmptyZipFiles();
+            FileInfo[] files = new DirectoryInfo(MannusBackupConfiguration.BackupDirectory).GetFiles("*.zip");
+            if (!MannusBackupConfiguration.GetConfig().TestSituation)
+            {
+                int numberOfFilesForCleanup = MannusBackupConfiguration.GetConfig().MinimumFilesToCleanup;
+                if (files.Length <= numberOfFilesForCleanup)
+                {
+                    logger.LogDebug(string.Format("delete files because less than {0} available", numberOfFilesForCleanup));
+                    Directory.Delete(MannusBackupConfiguration.BackupDirectory, true);
+                }
+            }
+        }
+
+        public long GetSize()
+        {
+            FileInfo[] files = new DirectoryInfo(MannusBackupConfiguration.BackupDirectory).GetFiles();
+            long result = 0;
+            foreach (FileInfo f in files)
+            {
+                logger.LogDebug(f.FullName);
+                result += f.Length;
+            }
+            return result / 1000;
+        }
+
+        public void PrepareBackupOutlookArchives()
+        {
+            ArchiveBackupPreparer preparer = new ArchiveBackupPreparer();
+            preparer.PrepareBackupMailArchives();
+        }
+
+        public void SendMail(List<string> xmlMessages)
+        {
+            // TODO: mail voorzien van logo Mannus.nl
+            // TODO: implementeren
+            BackupResultMailSender mailSender = new BackupResultMailSender();
+            var backupResult = BackupResult.FromXml(xmlMessages);
+            mailSender.SendMail(backupResult);
+        }
+
+        public void WriteLogsToDatabase()
+        {
+            BackupResultsWriter logwriter = new BackupResultsWriter();
+            logwriter.WriteLogToDatabase();
+        }
+
+        public void WriteMessagesToFile(List<string> messages)
+        {
+            string baseDirectory = MannusBackupConfiguration.GetConfig().BaseBackupDirectory;
+            string path = string.Format(@"{0}\backup_results", baseDirectory);
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            string filename = string.Format(@"{0}\{1:ddMMMMyyyy}.txt", path, DateTime.Now);
+            if (File.Exists(filename))
+            {
+                File.Delete(filename);
+            }
+            File.WriteAllText(filename, CreateMessage(messages));
+        }
+
+        public void WriteMessagesToXmlFile(List<string> xmlMessages)
+        {
+            logger.LogDebug("schrijf resultaten weg naar xml");
+            var result = BackupResult.FromXml(xmlMessages);
+            var xmlFileHandler = new BackupResultsXmlFileHandler();
+            xmlFileHandler.SaveResult(result);
+        }
+
+        internal void AddDatabaseTasks()
+        {
+            var sqlYogProfileProperty = _profile.Properties.Where(p => p.Name.Equals(ProfileProperties.SqlYog.ToString())).First();
+            var sqlYogConfigurationProperty = _repository.All<ConfigurationProperty>().Where(p => p.Name.Equals(ProfileProperties.SqlYog.ToString())).First();
+            var sqlYogDatabaseConfigurations = _profile.Configuration.Where(p => p.configurationid == sqlYogConfigurationProperty.id);
+            foreach (var configuration in sqlYogDatabaseConfigurations)
+            {
+                DatabaseTask databaseTask = new DatabaseTask();
+                databaseTask.SetConfiguration(configuration, sqlYogProfileProperty);
+                BackupTask<DatabaseTask> databaseTaskContainer = new BackupTask<DatabaseTask>(databaseTask, "database");
+                Tasks.Add(databaseTaskContainer as IBackupTask);
+                //!+ databasetask is nu niet meer multithreaded, BackupTask moet aangepast worden
+                //!+ task maken die oude .sql-files en de session/log files opruimt
+                //!+ in configuratie opnemen dat c:\dropbox\backup wordt meegenomen in de zip-files
+            }
+        }
+
+        internal void AddTasks()
+        {
+            logger.LogDebug("add tasks");
+            GenericConfigurationElementCollection<DirectoryElement> directories = MannusBackupConfiguration.GetConfig().BackupLocations;
+            BackupTaskOld<DirectoryElement, XCopyTask<DirectoryElement>> task3 = new BackupTaskOld<DirectoryElement, XCopyTask<DirectoryElement>>(directories, "XCopy");
+            //GoogleElement googleDocsConfiguration = MannusBackupConfiguration.GetConfig().GoogleDocsConfiguration;
+            //            BackupTask<GoogleElement, GoogleDocsTask<GoogleElement>> googleDocsTask = new BackupTask<GoogleElement, GoogleDocsTask<GoogleElement>>(googleDocsConfiguration, "GoogleDocs");
+            GenericConfigurationElementCollection<FtpSiteElement> ftpSites = MannusBackupConfiguration.GetConfig().FtpSites;
+            BackupTaskOld<FtpSiteElement, WebsitesTask<FtpSiteElement>> task = new BackupTaskOld<FtpSiteElement, WebsitesTask<FtpSiteElement>>(ftpSites, "Websites");
+
+            AddDatabaseTasks();
+            //! TODO: tasks aanmaken vanuit een andere class
+
+            //            Tasks.Add(googleDocsTask as IBackupTask);
+            Tasks.Add(task as IBackupTask);
+            Tasks.Add(task3 as IBackupTask);
         }
 
         internal void DatabaseStarted(object sender, TaskFinishedEventArgs e)
@@ -93,6 +191,54 @@ namespace MannusBackup
                                where task.TaskName.Equals(name)
                                select task;
                     Tasks.Remove(item.First());
+                }
+            }
+        }
+
+        private string CreateMessage(List<string> messages)
+        {
+            StringBuilder builder = new StringBuilder();
+            messages.ForEach(s => builder.AppendLine(s));
+            return builder.ToString();
+        }
+
+        private void DeleteEmptyZipFiles()
+        {
+            logger.LogDebug("delete empty zip files");
+            FileInfo[] files = new DirectoryInfo(MannusBackupConfiguration.BackupDirectory).GetFiles();
+            foreach (FileInfo f in files)
+            {
+                logger.LogDebug(f.FullName);
+                if (f.Length < 1000)
+                {
+                    logger.LogDebug("te kleine zip: " + f.FullName);
+                    f.Delete();
+                }
+            }
+        }
+
+        private void ExecuteAllTasks()
+        {
+            logger.LogDebug("execute all tasks");
+            Tasks.ForEach(t => t.TaskIsFinished += new EventHandler<TaskFinishedEventArgs>(TaskIsFinishedHandler));
+            Tasks.ForEach(t => t.ExecuteBackupTask());
+        }
+
+        private void TaskIsFinishedHandler(object sender, TaskFinishedEventArgs e)
+        {
+            if (e.Count)
+            {
+                Interlocked.Increment(ref finishedTasks);
+            }
+            if (TaskIsFinished != null)
+            {
+                TaskIsFinished(this, e);
+            }
+            if (finishedTasks == Tasks.Count)
+            {
+                if (BackupIsFinished != null)
+                {
+                    BackupIsFinished(this, new BackupFinishedEventArgs());
                 }
             }
         }
@@ -123,146 +269,6 @@ namespace MannusBackup
                 logger.LogException(ex);
                 return true;
             }
-        }
-
-        private void TaskIsFinishedHandler(object sender, TaskFinishedEventArgs e)
-        {
-            if (e.Count)
-            {
-                Interlocked.Increment(ref finishedTasks);
-            }
-            if (TaskIsFinished != null)
-            {
-                TaskIsFinished(this, e);
-            }
-            if (finishedTasks == Tasks.Count)
-            {
-                if (BackupIsFinished != null)
-                {
-                    BackupIsFinished(this, new BackupFinishedEventArgs());
-                }
-            }
-        }
-
-        internal void AddTasks()
-        {
-            logger.LogDebug("add tasks");
-            GenericConfigurationElementCollection<DirectoryElement> directories = MannusBackupConfiguration.GetConfig().BackupLocations;
-            BackupTask<DirectoryElement, XCopyTask<DirectoryElement>> task3 = new BackupTask<DirectoryElement, XCopyTask<DirectoryElement>>(directories, "XCopy");
-            //GoogleElement googleDocsConfiguration = MannusBackupConfiguration.GetConfig().GoogleDocsConfiguration;
-            //            BackupTask<GoogleElement, GoogleDocsTask<GoogleElement>> googleDocsTask = new BackupTask<GoogleElement, GoogleDocsTask<GoogleElement>>(googleDocsConfiguration, "GoogleDocs");
-            GenericConfigurationElementCollection<FtpSiteElement> ftpSites = MannusBackupConfiguration.GetConfig().FtpSites;
-            BackupTask<FtpSiteElement, WebsitesTask<FtpSiteElement>> task = new BackupTask<FtpSiteElement, WebsitesTask<FtpSiteElement>>(ftpSites, "Websites");
-
-            AddDatabaseTasks();
-            //! TODO: tasks aanmaken vanuit een andere class
-
-            //            Tasks.Add(googleDocsTask as IBackupTask);
-            Tasks.Add(task as IBackupTask);
-            Tasks.Add(task3 as IBackupTask);
-        }
-
-        internal void AddDatabaseTasks()
-        {
-            var sqlYogProfileProperty = _profile.Properties.Where(p => p.Name.Equals(ProfileProperties.SqlYog.ToString())).First();
-            var sqlYogConfigurationProperty = _repository.All<ConfigurationProperty>().Where(p => p.Name.Equals(ProfileProperties.SqlYog.ToString())).First();
-            var sqlYogDatabaseConfigurations = _profile.Configuration.Where(p => p.configurationid == sqlYogConfigurationProperty.id);
-            foreach (var configuration in sqlYogDatabaseConfigurations)
-            {
-                DatabaseTask databaseTask = new DatabaseTask(configuration, sqlYogProfileProperty);
-                Tasks.Add(databaseTask as IBackupTask);
-                //!+ databasetask is nu niet meer multithreaded, BackupTask moet aangepast worden
-            }
-        }
-
-        private string CreateMessage(List<string> messages)
-        {
-            StringBuilder builder = new StringBuilder();
-            messages.ForEach(s => builder.AppendLine(s));
-            return builder.ToString();
-        }
-
-        public void Cleanup()
-        {
-            logger.LogDebug("clean the base directory");
-            DirectoryManager.DeleteBaseDirectory();
-            DeleteEmptyZipFiles();
-            FileInfo[] files = new DirectoryInfo(MannusBackupConfiguration.BackupDirectory).GetFiles("*.zip");
-            if (!MannusBackupConfiguration.GetConfig().TestSituation)
-            {
-                int numberOfFilesForCleanup = MannusBackupConfiguration.GetConfig().MinimumFilesToCleanup;
-                if (files.Length <= numberOfFilesForCleanup)
-                {
-                    logger.LogDebug(string.Format("delete files because less than {0} available", numberOfFilesForCleanup));
-                    Directory.Delete(MannusBackupConfiguration.BackupDirectory, true);
-                }
-            }
-        }
-
-        private void DeleteEmptyZipFiles()
-        {
-            logger.LogDebug("delete empty zip files");
-            FileInfo[] files = new DirectoryInfo(MannusBackupConfiguration.BackupDirectory).GetFiles();
-            foreach (FileInfo f in files)
-            {
-                logger.LogDebug(f.FullName);
-                if (f.Length < 1000)
-                {
-                    logger.LogDebug("te kleine zip: " + f.FullName);
-                    f.Delete();
-                }
-            }
-        }
-
-        public void WriteMessagesToFile(List<string> messages)
-        {
-            string baseDirectory = MannusBackupConfiguration.GetConfig().BaseBackupDirectory;
-            string path = string.Format(@"{0}\backup_results", baseDirectory);
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
-            string filename = string.Format(@"{0}\{1:ddMMMMyyyy}.txt", path, DateTime.Now);
-            if (File.Exists(filename))
-            {
-                File.Delete(filename);
-            }
-            File.WriteAllText(filename, CreateMessage(messages));
-        }
-
-        public void WriteMessagesToXmlFile(List<string> xmlMessages)
-        {
-            logger.LogDebug("schrijf resultaten weg naar xml");
-            var result = BackupResult.FromXml(xmlMessages);
-            var xmlFileHandler = new BackupResultsXmlFileHandler();
-            xmlFileHandler.SaveResult(result);
-        }
-
-        public long GetSize()
-        {
-            FileInfo[] files = new DirectoryInfo(MannusBackupConfiguration.BackupDirectory).GetFiles();
-            long result = 0;
-            foreach (FileInfo f in files)
-            {
-                logger.LogDebug(f.FullName);
-                result += f.Length;
-            }
-            return result / 1000;
-        }
-
-        public void WriteLogsToDatabase()
-        {
-            BackupResultsWriter logwriter = new BackupResultsWriter();
-            logwriter.WriteLogToDatabase();
-        }
-
-        public void SendMail(List<string> xmlMessages)
-        {
-            // TODO: mail voorzien van logo Mannus.nl
-            // TODO: implementeren
-            BackupResultMailSender mailSender = new BackupResultMailSender();
-            var backupResult = BackupResult.FromXml(xmlMessages);
-            mailSender.SendMail(backupResult);
         }
     }
 }

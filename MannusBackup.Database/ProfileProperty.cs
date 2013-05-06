@@ -14,7 +14,7 @@ namespace MannusBackup.Database
     
     public partial class ProfileProperty
     {
-        public int Id { get; set; }
+        public int id { get; set; }
         public string Name { get; set; }
         public string Value { get; set; }
         public int profileid { get; set; }

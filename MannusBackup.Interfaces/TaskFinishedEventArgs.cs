@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MannusBackup
+namespace MannusBackup.Interfaces
 {
     /// <summary>
     /// resultaat van een afgeronde taak
@@ -13,9 +13,9 @@ namespace MannusBackup
         }
 
         /// <summary>
-        /// Starttijd van de taak
+        /// Telt de taak mee voor be-eindiging van de backup-procedure
         /// </summary>
-        public DateTime StartTime { get; set; }
+        public bool Count { get; set; }
 
         /// <summary>
         /// Eindtijd van de taak
@@ -28,9 +28,9 @@ namespace MannusBackup
         public string Message { get; set; }
 
         /// <summary>
-        /// Telt de taak mee voor be-eindiging van de backup-procedure
+        /// Starttijd van de taak
         /// </summary>
-        public bool Count { get; set; }
+        public DateTime StartTime { get; set; }
 
         public override string ToString()
         {

@@ -4,7 +4,7 @@ using System.IO;
 
 namespace MannusBackup.Tasks.Tasks
 {
-    internal class ZipTask<T> : TaskBase where T : MannusBackupElement, new()
+    internal class ZipTask<T> : OldTaskBase where T : MannusBackupElement, new()
     {
         public ZipTask() : base(TaskType.Zipfiles) { }
 

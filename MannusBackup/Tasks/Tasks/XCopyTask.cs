@@ -5,17 +5,88 @@ using System.Linq;
 using System.Threading;
 using ESRINederland.Framework.Logging;
 using MannusBackup.Configuration;
+using MannusBackup.Interfaces;
 
 namespace MannusBackup.Tasks.Tasks
 {
-    internal class XCopyTask<T> : TaskBase where T : MannusBackupElement, new()
+    internal class CopyTask
     {
-        public XCopyTask() : base(TaskType.XCopy) { }
+        private string backupDirectory;
+        private DirectoryInfo directory;
+        private string key;
 
+        public CopyTask(DirectoryInfo directory, string key, string backupDirectory)
+        {
+            this.directory = directory;
+            this.key = key;
+            this.backupDirectory = backupDirectory;
+        }
+
+        public event EventHandler<TaskFinishedEventArgs> TaskIsFinished;
+
+        public void Execute()
+        {
+            ZipTask<ZipFileElement> zipTask = new ZipTask<ZipFileElement>();
+            string zipFileName = string.Format(@"{0}\{1}.zip", directory.Parent.FullName, directory.Name);
+            string prefix = MannusBackupConfiguration.GetConfig().HostName;
+            string backupZipFileName = string.Format(@"{0}\{1}_{2}_{3}.zip", backupDirectory, prefix, key, directory.Name);
+            zipTask.Exclusions = MannusBackupConfiguration.GetExclusionsForConfiguration(TaskType.XCopy, key);
+            zipTask.ExecuteZipTask(directory.FullName, zipFileName);
+            try
+            {
+                File.Move(zipFileName, backupZipFileName);
+            }
+            catch (Exception e)
+            {
+                Logger.GetLogger().LogError(string.Format("{0}, {1}, {2}, {3}, {4}", e.Message, key, backupDirectory, zipFileName, backupZipFileName));
+            }
+            TaskIsFinished(this, null);
+        }
+    }
+
+    internal class XCopyTask<T> : OldTaskBase where T : MannusBackupElement, new()
+    {
         private Stack<DirectoryInfo> directories = new Stack<DirectoryInfo>();
+
         private int maximumNumberOfThreads = 3;
-        private int numberOfDirectoriesCopied = 0;
+
         private int numberOfDirectories;
+
+        private int numberOfDirectoriesCopied = 0;
+
+        public XCopyTask()
+            : base(TaskType.XCopy)
+        {
+        }
+
+        internal void DeleteTemporaryDirectory(DirectoryInfo directory, string key)
+        {
+            _logger.LogDebug(string.Format("{0} - delete temporary documents directory", key));
+            try
+            {
+                RemoveReadonlyAttributeFromFilesInDirectory(directory);
+                directory.Delete(true);
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                _logger.LogError(string.Format("{0} - {1}", e.Message, directory.FullName));
+            }
+        }
+
+        internal string GetLocation(DirectoryElement element)
+        {
+            _logger.LogDebug("Directory Key: " + element.Key);
+            _logger.LogDebug("Drive: " + element.Drive);
+            _logger.LogDebug("Location: " + element.Location);
+            DriveElement driveElement = MannusBackupConfiguration.GetConfig().Drives[element.Drive];
+            _logger.LogDebug("Drive Key: " + driveElement.Key);
+            string drive = MannusBackupConfiguration.FindDrive(driveElement);
+            if (string.IsNullOrEmpty(drive))
+            {
+                return null;
+            }
+            return Path.Combine(drive, element.Location);
+        }
 
         protected override void Execute()
         {
@@ -76,57 +147,12 @@ namespace MannusBackup.Tasks.Tasks
             DeleteTemporaryDirectory(tempDocuDirectory, element.Key);
         }
 
-        internal void DeleteTemporaryDirectory(DirectoryInfo directory, string key)
+        private void AddDirectoriesToStack(DirectoryInfo[] directories)
         {
-            _logger.LogDebug(string.Format("{0} - delete temporary documents directory", key));
-            try
+            foreach (DirectoryInfo directory in directories)
             {
-                RemoveReadonlyAttributeFromFilesInDirectory(directory);
-                directory.Delete(true);
+                this.directories.Push(directory);
             }
-            catch (UnauthorizedAccessException e)
-            {
-                _logger.LogError(string.Format("{0} - {1}", e.Message, directory.FullName));
-            }
-        }
-
-        private void RemoveReadonlyAttributeFromFilesInDirectory(DirectoryInfo directory)
-        {
-            var files = directory.GetFiles("*", SearchOption.AllDirectories);
-            foreach (FileInfo file in files)
-            {
-                file.Attributes = FileAttributes.Normal;
-            }
-        }
-
-        internal string GetLocation(DirectoryElement element)
-        {
-            _logger.LogDebug("Directory Key: " + element.Key);
-            _logger.LogDebug("Drive: " + element.Drive);
-            _logger.LogDebug("Location: " + element.Location);
-            DriveElement driveElement = MannusBackupConfiguration.GetConfig().Drives[element.Drive];
-            _logger.LogDebug("Drive Key: " + driveElement.Key);
-            string drive = MannusBackupConfiguration.FindDrive(driveElement);
-            if (string.IsNullOrEmpty(drive))
-            {
-                return null;
-            }
-            return Path.Combine(drive, element.Location);
-        }
-
-        private DirectoryInfo[] FilterDirectories(DirectoryInfo[] directoriesInfo)
-        {
-            Exclusions = MannusBackupConfiguration.GetExclusionsForConfiguration(Type, Configuration.Key);
-            foreach (ExclusionElement exclusion in Exclusions)
-            {
-                if (exclusion.TypeOfExclusion == ExclusionType.Directory && exclusion.Type == TaskType.XCopy)
-                {
-                    string name = exclusion.Value.ToLowerInvariant();
-                    IEnumerable<DirectoryInfo> selected = directoriesInfo.Where(d => !d.Name.ToLower().Equals(name));
-                    directoriesInfo = selected.ToArray();
-                }
-            }
-            return directoriesInfo;
         }
 
         private DirectoryInfo AddDirectoryWithFilesFromRootDirectory(DirectoryInfo root)
@@ -159,6 +185,36 @@ namespace MannusBackup.Tasks.Tasks
             return subDir;
         }
 
+        private void DirectoryIsCopied(object sender, TaskFinishedEventArgs e)
+        {
+            Interlocked.Increment(ref numberOfDirectoriesCopied);
+            StartThread();
+        }
+
+        private DirectoryInfo[] FilterDirectories(DirectoryInfo[] directoriesInfo)
+        {
+            Exclusions = MannusBackupConfiguration.GetExclusionsForConfiguration(Type, Configuration.Key);
+            foreach (ExclusionElement exclusion in Exclusions)
+            {
+                if (exclusion.TypeOfExclusion == ExclusionType.Directory && exclusion.Type == TaskType.XCopy)
+                {
+                    string name = exclusion.Value.ToLowerInvariant();
+                    IEnumerable<DirectoryInfo> selected = directoriesInfo.Where(d => !d.Name.ToLower().Equals(name));
+                    directoriesInfo = selected.ToArray();
+                }
+            }
+            return directoriesInfo;
+        }
+
+        private void RemoveReadonlyAttributeFromFilesInDirectory(DirectoryInfo directory)
+        {
+            var files = directory.GetFiles("*", SearchOption.AllDirectories);
+            foreach (FileInfo file in files)
+            {
+                file.Attributes = FileAttributes.Normal;
+            }
+        }
+
         private void StartFirstThreads()
         {
             for (int i = 0; i < maximumNumberOfThreads; i++)
@@ -178,54 +234,6 @@ namespace MannusBackup.Tasks.Tasks
                 Thread thread = new Thread(threadStart);
                 thread.Start();
             }
-        }
-
-        private void DirectoryIsCopied(object sender, TaskFinishedEventArgs e)
-        {
-            Interlocked.Increment(ref numberOfDirectoriesCopied);
-            StartThread();
-        }
-
-        private void AddDirectoriesToStack(DirectoryInfo[] directories)
-        {
-            foreach (DirectoryInfo directory in directories)
-            {
-                this.directories.Push(directory);
-            }
-        }
-    }
-
-    internal class CopyTask
-    {
-        DirectoryInfo directory;
-        private string key;
-        private string backupDirectory;
-        public event EventHandler<TaskFinishedEventArgs> TaskIsFinished;
-
-        public CopyTask(DirectoryInfo directory, string key, string backupDirectory)
-        {
-            this.directory = directory;
-            this.key = key;
-            this.backupDirectory = backupDirectory;
-        }
-
-        public void Execute()
-        {
-            ZipTask<ZipFileElement> zipTask = new ZipTask<ZipFileElement>();
-            string zipFileName = string.Format(@"{0}\{1}.zip", directory.Parent.FullName, directory.Name);
-            string prefix = MannusBackupConfiguration.GetConfig().HostName;
-            string backupZipFileName = string.Format(@"{0}\{1}_{2}_{3}.zip", backupDirectory, prefix, key, directory.Name);
-            zipTask.Exclusions = MannusBackupConfiguration.GetExclusionsForConfiguration(TaskType.XCopy, key);
-            zipTask.ExecuteZipTask(directory.FullName, zipFileName);
-            try
-            {
-                File.Move(zipFileName, backupZipFileName);
-            }
-            catch (Exception e)
-            {
-                Logger.GetLogger().LogError(string.Format("{0}, {1}, {2}, {3}, {4}", e.Message, key, backupDirectory, zipFileName, backupZipFileName));
-            }
-            TaskIsFinished(this, null);
         }
     }
 }

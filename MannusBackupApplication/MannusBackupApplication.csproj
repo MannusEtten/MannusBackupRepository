@@ -63,6 +63,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MannusBackup.Interfaces\MannusBackup.Interfaces.csproj">
+      <Project>{d6359f76-7810-4024-8045-287d9d026c0e}</Project>
+      <Name>MannusBackup.Interfaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MannusBackup\MannusBackup.csproj">
       <Project>{B33E9EEA-7C69-45B3-9CD1-EFB02153A905}</Project>
       <Name>MannusBackup</Name>

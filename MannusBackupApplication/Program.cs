@@ -6,6 +6,7 @@ using System.Threading;
 using ESRINederland.Framework.Logging;
 using MannusBackup;
 using MannusBackup.Configuration;
+using MannusBackup.Interfaces;
 
 namespace MannusBackupApplication
 {
@@ -13,6 +14,8 @@ namespace MannusBackupApplication
     {
         private static bool Finished = false;
         private static List<string> messages = new List<string>();
+
+        private static DateTime start;
 
         public static void Main(string[] args)
         {
@@ -26,7 +29,41 @@ namespace MannusBackupApplication
             }
         }
 
-        private static DateTime start;
+        private static void backup_BackupIsFinished(object sender, BackupFinishedEventArgs e)
+        {
+            DateTime eind = DateTime.Now;
+            TimeSpan verschil = eind - start;
+            string schilString = string.Format("{0}:{1}:{2}", verschil.Hours, verschil.Minutes, verschil.Seconds);
+            string message = string.Format("backup klaargezet op {0} en gereed op {1} ({2})\r\n", start, eind, schilString);
+            Console.WriteLine(message);
+            messages.Add(message);
+        }
+
+        private static void backup_taskIsFinished(object sender, TaskFinishedEventArgs e)
+        {
+            Finished = true;
+            Console.WriteLine(e.ToString());
+            messages.Add(e.ToString());
+        }
+
+        private static string FormatSizeInGb(long size)
+        {
+            long size2 = size;
+            if (size2 > 1000)
+            {
+                size2 = size / 1000;
+            }
+            CultureInfo culture = new CultureInfo("nl-NL");
+            string result = string.Format("grootte is: {0} gb\r\n", size2.ToString("0,###", culture));
+            return result;
+        }
+
+        private static string FormatSizeInMb(long size)
+        {
+            CultureInfo culture = new CultureInfo("nl-NL");
+            string result = string.Format("grootte is: {0} mb\r\n", size.ToString("0,###,###", culture));
+            return result;
+        }
 
         private static void NewBackupMethod()
         {
@@ -87,42 +124,6 @@ namespace MannusBackupApplication
             backup.WriteMessagesToXmlFile(xmlMessages);
             backup.WriteLogsToDatabase();
             backup.SendMail(xmlMessages);
-        }
-
-        private static string FormatSizeInMb(long size)
-        {
-            CultureInfo culture = new CultureInfo("nl-NL");
-            string result = string.Format("grootte is: {0} mb\r\n", size.ToString("0,###,###", culture));
-            return result;
-        }
-
-        private static string FormatSizeInGb(long size)
-        {
-            long size2 = size;
-            if (size2 > 1000)
-            {
-                size2 = size / 1000;
-            }
-            CultureInfo culture = new CultureInfo("nl-NL");
-            string result = string.Format("grootte is: {0} gb\r\n", size2.ToString("0,###", culture));
-            return result;
-        }
-
-        private static void backup_BackupIsFinished(object sender, BackupFinishedEventArgs e)
-        {
-            DateTime eind = DateTime.Now;
-            TimeSpan verschil = eind - start;
-            string schilString = string.Format("{0}:{1}:{2}", verschil.Hours, verschil.Minutes, verschil.Seconds);
-            string message = string.Format("backup klaargezet op {0} en gereed op {1} ({2})\r\n", start, eind, schilString);
-            Console.WriteLine(message);
-            messages.Add(message);
-        }
-
-        private static void backup_taskIsFinished(object sender, TaskFinishedEventArgs e)
-        {
-            Finished = true;
-            Console.WriteLine(e.ToString());
-            messages.Add(e.ToString());
         }
     }
 }
