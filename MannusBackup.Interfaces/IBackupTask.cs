@@ -8,7 +8,7 @@ namespace MannusBackup.Interfaces
     public interface IBackupTask
     {
         /// <summary>
-        /// Treedt op als taak is uitgevoerd
+        /// Treedt op als taak is uitgevoerd, kan een collectie zijn van meerdere specifieke taken
         /// </summary>
         event EventHandler<TaskFinishedEventArgs> TaskIsFinished;
 

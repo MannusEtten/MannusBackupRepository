@@ -16,10 +16,15 @@ namespace MannusBackup.Tasks
         {
             Type = typeOfTask;
             _logger = Logger.GetLogger();
+            TimeOut = 30;
+            //! TODO: iets maken om uit de configuratie de time-out time op te halen
+            //! TODO: groep-settings maken voor configuratie
         }
 
-        protected TaskType Type { get; private set; }
+        public TaskType Type { get; private set; }
 
         protected internal abstract void Execute();
+
+        public int TimeOut { get; set; }
     }
 }

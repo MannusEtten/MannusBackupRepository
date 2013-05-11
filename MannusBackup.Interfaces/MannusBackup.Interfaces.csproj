@@ -46,6 +46,7 @@
     <Compile Include="IBackupTask.cs" />
     <Compile Include="IRepository.cs" />
     <Compile Include="ProfileProperties.cs" />
+    <Compile Include="ProfileSubProperties.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TaskFinishedEventArgs.cs" />
   </ItemGroup>
