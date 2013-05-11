@@ -146,18 +146,21 @@ namespace MannusBackup
         internal void AddDatabaseTasks()
         {
             var sqlYogProfileProperty = _profile.Properties.Where(p => p.Name.Equals(ProfileProperties.SqlYog.ToString())).First();
-            var sqlYogConfigurationProperty = _repository.All<ConfigurationProperty>().Where(p => p.Name.Equals(ProfileProperties.SqlYog.ToString())).First();
-            var sqlYogDatabaseConfigurations = _profile.Configuration.Where(p => p.configurationid == sqlYogConfigurationProperty.id);
-            foreach (var configuration in sqlYogDatabaseConfigurations)
+            var sqlYogConfigurationGroups = _profile.ConfigurationGroups.Where(g => string.Equals(g.Type, ProfileProperties.SqlYog.ToString(), StringComparison.InvariantCultureIgnoreCase));
+            var databaseTasks = new List<DatabaseTask>();
+            foreach (var configurationGroup in sqlYogConfigurationGroups)
             {
+                var sqlYogConfigurationProperties = configurationGroup.Configuration;
                 DatabaseTask databaseTask = new DatabaseTask();
-                databaseTask.SetConfiguration(configuration, sqlYogProfileProperty);
-                BackupTask<DatabaseTask> databaseTaskContainer = new BackupTask<DatabaseTask>(databaseTask, "database");
-                Tasks.Add(databaseTaskContainer as IBackupTask);
+                databaseTask.SetConfiguration(sqlYogConfigurationProperties, sqlYogProfileProperty);
+                databaseTasks.Add(databaseTask);
                 //!+ databasetask is nu niet meer multithreaded, BackupTask moet aangepast worden
                 //!+ task maken die oude .sql-files en de session/log files opruimt
                 //!+ in configuratie opnemen dat c:\dropbox\backup wordt meegenomen in de zip-files
             }
+
+            BackupTask<DatabaseTask> databaseTaskContainer = new BackupTask<DatabaseTask>(databaseTasks, "database");
+            Tasks.Add(databaseTaskContainer as IBackupTask);
         }
 
         internal void AddTasks()

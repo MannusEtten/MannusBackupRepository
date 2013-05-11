@@ -17,13 +17,13 @@ namespace MannusBackup.Database
         public Profile()
         {
             this.Properties = new HashSet<ProfileProperty>();
-            this.Configuration = new HashSet<ProfileConfiguration>();
+            this.ConfigurationGroups = new HashSet<ProfileConfigurationGroup>();
         }
     
         public int Id { get; set; }
         public string ProfileType { get; set; }
     
         public virtual ICollection<ProfileProperty> Properties { get; set; }
-        public virtual ICollection<ProfileConfiguration> Configuration { get; set; }
+        public virtual ICollection<ProfileConfigurationGroup> ConfigurationGroups { get; set; }
     }
 }

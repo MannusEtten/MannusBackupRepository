@@ -5,14 +5,18 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="1960b912b4264c399db0f50d5b599ce3" Name="Diagram1" ZoomLevel="81">
-        <EntityTypeShape EntityType="MannusBackupModel.ConfigurationProperty" Width="2.5" PointX="20.25" PointY="6.75" />
-        <EntityTypeShape EntityType="MannusBackupModel.Profile" Width="2.375" PointX="24.625" PointY="9.375" />
-        <EntityTypeShape EntityType="MannusBackupModel.ProfileConfiguration" Width="2.75" PointX="20.625" PointY="9.125" />
-        <EntityTypeShape EntityType="MannusBackupModel.ProfileProperty" Width="2.5" PointX="28.75" PointY="8.75" />
+        <EntityTypeShape EntityType="MannusBackupModel.ConfigurationProperty" Width="2.5" PointX="20.625" PointY="6.25" />
+        <EntityTypeShape EntityType="MannusBackupModel.Profile" Width="2.375" PointX="27.5" PointY="9.5" />
+        <EntityTypeShape EntityType="MannusBackupModel.ProfileConfiguration" Width="2.75" PointX="20" PointY="9.5" />
+        <EntityTypeShape EntityType="MannusBackupModel.ProfileProperty" Width="2.5" PointX="24.5" PointY="6.875" />
         <EntityTypeShape EntityType="MannusBackupModel.backup_results" Width="1.5" PointX="17.375" PointY="9.375" />
         <AssociationConnector Association="MannusBackupModel.FK_configurationproperty_to_configuration" />
         <AssociationConnector Association="MannusBackupModel.FK_backup_profileproperty" />
-        <AssociationConnector Association="MannusBackupModel.FK_configurationproperty_to_profile" />
+        <EntityTypeShape EntityType="MannusBackupModel.ConfigurationPropertyGroup" Width="2.5" PointX="17.125" PointY="6.125" />
+        <AssociationConnector Association="MannusBackupModel.FK_backup_configuration" />
+        <EntityTypeShape EntityType="MannusBackupModel.ProfileConfigurationGroup" Width="2.875" PointX="23.75" PointY="9.5" />
+        <AssociationConnector Association="MannusBackupModel.FK_backup_profile_configuration_group" />
+        <AssociationConnector Association="MannusBackupModel.FK_backup_profile_configuration" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

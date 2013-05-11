@@ -16,11 +16,10 @@ namespace MannusBackup.Database
     {
         public int id { get; set; }
         public int configurationid { get; set; }
-        public int profileid { get; set; }
-        public string Name { get; set; }
         public string Value { get; set; }
+        public int profileconfigurationgroupid { get; set; }
     
         public virtual ConfigurationProperty backup_configuration { get; set; }
-        public virtual Profile backup_profile { get; set; }
+        public virtual ProfileConfigurationGroup backup_profile_configuration_group { get; set; }
     }
 }

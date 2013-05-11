@@ -30,5 +30,7 @@ namespace MannusBackup.Database
         public DbSet<ProfileConfiguration> backup_profile_configuration { get; set; }
         public DbSet<ProfileProperty> backup_profileproperty { get; set; }
         public DbSet<backup_results> backup_results { get; set; }
+        public DbSet<ConfigurationPropertyGroup> backup_configuration_group { get; set; }
+        public DbSet<ProfileConfigurationGroup> backup_profile_configuration_group { get; set; }
     }
 }

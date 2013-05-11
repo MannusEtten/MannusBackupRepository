@@ -12,18 +12,19 @@ namespace MannusBackup.Database
     using System;
     using System.Collections.Generic;
     
-    public partial class ConfigurationProperty
+    public partial class ProfileConfigurationGroup
     {
-        public ConfigurationProperty()
+        public ProfileConfigurationGroup()
         {
-            this.backup_profile_configuration = new HashSet<ProfileConfiguration>();
+            this.Configuration = new HashSet<ProfileConfiguration>();
         }
     
         public int id { get; set; }
+        public int profileid { get; set; }
+        public string Type { get; set; }
         public string Name { get; set; }
-        public int groupid { get; set; }
     
-        public virtual ICollection<ProfileConfiguration> backup_profile_configuration { get; set; }
-        public virtual ConfigurationPropertyGroup backup_configuration_group { get; set; }
+        public virtual Profile backup_profile { get; set; }
+        public virtual ICollection<ProfileConfiguration> Configuration { get; set; }
     }
 }
