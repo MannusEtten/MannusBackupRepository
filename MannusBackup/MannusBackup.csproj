@@ -108,7 +108,6 @@
     <Compile Include="Configuration\MannusBackupFtpIndexerConfiguration.cs" />
     <Compile Include="Configuration\MannusBackupServiceConfiguration.cs" />
     <Compile Include="Configuration\UsbDriveElement.cs" />
-    <Compile Include="Database\MySQLStarter.cs" />
     <Compile Include="DateTimeCreator.cs" />
     <Compile Include="DirectoryManager.cs" />
     <Compile Include="DiskSpaceChecker.cs" />
@@ -131,8 +130,6 @@
     <Compile Include="Configuration\ZipFileElement.cs" />
     <Compile Include="Configuration\DirectoryElement.cs" />
     <Compile Include="Configuration\FtpSiteElement.cs" />
-    <Compile Include="Tasks\Database\DatabaseDumper.cs" />
-    <Compile Include="Tasks\Database\SqlYogDatabaseTask.cs" />
     <Compile Include="Tasks\GoogleDocs\DuplicateFilesAndDirectoryRemover.cs" />
     <Compile Include="Tasks\TaskBase.cs" />
     <Compile Include="Tasks\Tasks\DatabaseTask.cs" />

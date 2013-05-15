@@ -66,6 +66,7 @@
       <DependentUpon>MannusBackupEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="ConfigurationPropertyPartial.cs" />
+    <Compile Include="ConfigurationRepository.cs" />
     <Compile Include="CreatorBase.cs" />
     <Compile Include="EnumProfileType.cs" />
     <Compile Include="MannusBackupEntities.Context.cs">
@@ -102,6 +103,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository.cs" />
+    <Compile Include="SqlYogConfiguration.cs" />
     <Compile Include="UserCreator.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -13,13 +13,14 @@ namespace MannusBackup.UnitTests.Tasks
     public class DatabaseTaskTest
     {
         private DatabaseTask _databaseTask;
+        private string _dropboxFolder = @"C:\Dropbox\backup\";
 
         [TestMethod]
         public void Execute()
         {
             var task = _databaseTask;
             task.Execute();
-            var fileNames = Directory.GetFiles(@"C:\Dropbox\backup\");
+            var fileNames = Directory.GetFiles(_dropboxFolder);
             var file = fileNames.ToList().Find(f => f.Contains("basketbalnieuws.sql"));
             Assert.IsNotNull(file);
         }
@@ -29,12 +30,10 @@ namespace MannusBackup.UnitTests.Tasks
         {
             var _repository = new Repository();
             var _profile = _repository.All<Profile>().Where(p => p.Id == 2).First();
-            var sqlYogProfileProperty = _profile.Properties.Where(p => p.Name.Equals(ProfileProperties.SqlYog.ToString())).First();
-            var profilePropertiesTypeName = ProfileProperties.SqlYog.ToString();
-            var sqlYogConfigurationProperty = _repository.All<MannusBackup.Database.ConfigurationProperty>().Where(p => p.Name.Equals(profilePropertiesTypeName)).First();
-            var sqlYogDatabaseConfigurations = _profile.Configuration.Where(p => p.configurationid == sqlYogConfigurationProperty.id);
+            var configuration = new ConfigurationRepository(_profile).GetDatabaseTaskConfiguration();
             _databaseTask = new DatabaseTask();
-            _databaseTask.SetConfiguration(sqlYogDatabaseConfigurations.First(), sqlYogProfileProperty);
+            var properties = configuration.Configurations.ToList()[0].Configuration;
+            _databaseTask.SetConfiguration(properties, configuration.SqlYogProfileProperty);
         }
     }
 }
