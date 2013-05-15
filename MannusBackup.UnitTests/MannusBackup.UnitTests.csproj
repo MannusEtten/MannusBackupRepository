@@ -60,7 +60,6 @@
     <Compile Include="BackupNewTest.cs" />
     <Compile Include="MannusBackupResults\BackupResultsDatabaseHandlerTest.cs" />
     <Compile Include="MannusBackupResults\BackupResultsXmlFileHandlerTest.cs" />
-    <Compile Include="Database\MySQLStarterTest.cs" />
     <Compile Include="DateTimeCreatorTest.cs" />
     <Compile Include="DiskSpaceCheckerTest.cs" />
     <Compile Include="FtpIndexer\FtpIndexerTest.cs" />
@@ -99,6 +98,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Database\" />
     <Folder Include="Service\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

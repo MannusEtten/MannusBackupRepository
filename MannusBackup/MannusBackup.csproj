@@ -132,7 +132,7 @@
     <Compile Include="Configuration\FtpSiteElement.cs" />
     <Compile Include="Tasks\GoogleDocs\DuplicateFilesAndDirectoryRemover.cs" />
     <Compile Include="Tasks\TaskBase.cs" />
-    <Compile Include="Tasks\Tasks\DatabaseTask.cs" />
+    <Compile Include="Tasks\DatabaseTask.cs" />
     <Compile Include="Tasks\EnumTaskStatus.cs" />
     <Compile Include="Tasks\Tasks\GoogleDocsTask.cs" />
     <Compile Include="Tasks\OldTaskBase.cs" />

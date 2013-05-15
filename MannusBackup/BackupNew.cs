@@ -61,10 +61,6 @@ namespace MannusBackup
             }
             logger.LogDebug("add all backup tasks");
             AddTasks();
-            logger.LogDebug("start MySQL-database");
-            MySQLStarter databaseStarter = new MySQLStarter(MannusBackupConfiguration.GetConfig().MySQLServiceName);
-            databaseStarter.TaskIsFinished += new EventHandler<TaskFinishedEventArgs>(DatabaseStarted);
-            databaseStarter.StartDatabase();
             logger.LogDebug("execute all backup tasks");
             ExecuteAllTasks();
         }
