@@ -126,11 +126,9 @@
     <Compile Include="Tasks\BackupTaskOld.cs" />
     <Compile Include="Configuration\ExclusionElement.cs" />
     <Compile Include="Configuration\DatabaseElement.cs" />
-    <Compile Include="Configuration\GoogleElement.cs" />
     <Compile Include="Configuration\ZipFileElement.cs" />
     <Compile Include="Configuration\DirectoryElement.cs" />
     <Compile Include="Configuration\FtpSiteElement.cs" />
-    <Compile Include="Tasks\GoogleDocs\DuplicateFilesAndDirectoryRemover.cs" />
     <Compile Include="Tasks\TaskBase.cs" />
     <Compile Include="Tasks\DatabaseTask.cs" />
     <Compile Include="Tasks\EnumTaskStatus.cs" />
@@ -142,7 +140,6 @@
     <Compile Include="Tasks\Website\FtpDirectoryBrowser.cs" />
     <Compile Include="Tasks\Website\FtpDownload.cs" />
     <Compile Include="Configuration\MannusBackupConfiguration.cs" />
-    <Compile Include="Tasks\GoogleDocs\GoogleDocsDownloader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tasks\Tasks\WebsitesTask.cs" />
   </ItemGroup>

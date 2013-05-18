@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using MannusBackup.Configuration;
@@ -39,6 +40,7 @@ namespace MannusBackup.Tasks
                 {
                     dumpProcess.WaitForExit(5000);
                 }
+                DeleteUnnecessaryFiles();
             }
             catch (Exception e)
             {
@@ -46,12 +48,30 @@ namespace MannusBackup.Tasks
             }
         }
 
+        private void DeleteFile(string file)
+        {
+            if (!file.Contains(".sql"))
+            {
+                File.Delete(file);
+            }
+        }
+
+        private void DeleteUnnecessaryFiles()
+        {
+            var backupDirectory = _configurationRepository.GetProfileConfigurationValue(_profileConfiguration, ProfileSubProperties.BackupDirectory);
+            var filesInBackupDirectory = Directory.GetFiles(backupDirectory);
+            foreach (var file in filesInBackupDirectory)
+            {
+                DeleteFile(file);
+            }
+        }
+
         private string GetBatchFileArguments()
         {
             string batchfileArguments = "{0} {1} {2}";
-            string jobfile = _profileConfiguration.Where(p => p.backup_profile_configuration_group.Name.Equals(ProfileSubProperties.SqlYogJobFileName)).First().Value;
-            string logfile = _profileConfiguration.Where(p => p.backup_profile_configuration_group.Name.Equals(ProfileSubProperties.SqlYogLogFileName)).First().Value;
-            string sessionfile = _profileConfiguration.Where(p => p.backup_profile_configuration_group.Name.Equals(ProfileSubProperties.SqlYogSessionFileName)).First().Value;
+            var jobfile = _configurationRepository.GetProfileConfigurationValue(_profileConfiguration, ProfileSubProperties.SqlYogJobFileName);
+            var logfile = _configurationRepository.GetProfileConfigurationValue(_profileConfiguration, ProfileSubProperties.SqlYogLogFileName);
+            var sessionfile = _configurationRepository.GetProfileConfigurationValue(_profileConfiguration, ProfileSubProperties.SqlYogSessionFileName);
             return string.Format(batchfileArguments, jobfile, logfile, sessionfile);
         }
     }

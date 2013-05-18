@@ -11,64 +11,50 @@ namespace MannusBackup.Configuration
 {
     public sealed class MannusBackupConfiguration : ConfigurationSection
     {
-        public static MannusBackupConfiguration GetConfig()
+        public static string BackupDirectory
         {
-            return ConfigurationManager.GetSection("MannusBackup") as MannusBackupConfiguration;
+            get
+            {
+                string baseDirectory = MannusBackupConfiguration.GetConfig().BaseBackupDirectory;
+                DateTime date = DateTime.Now;
+                string datum = date.ToString("ddMMMMyyyy", CultureInfo.InvariantCulture);
+                string prefix = MannusBackupConfiguration.GetConfig().HostName;
+                return string.Format(@"{0}\backup_{1}_{2}", baseDirectory, prefix, datum);
+            }
         }
 
-        #region "app.config section implementation"
-
-        [ConfigurationProperty("Configuration")]
-        public GenericConfigurationElementCollection<ConfigurationPropertyElement> Configuration
+        public string BaseBackupDirectory
         {
-            get { return (GenericConfigurationElementCollection<ConfigurationPropertyElement>)this["Configuration"]; }
+            get { return Configuration["basebackupdirectory"].Value; }
         }
 
-        [ConfigurationProperty("Drives")]
-        public GenericConfigurationElementCollection<DriveElement> Drives
+        public string ConnectionStringName
         {
-            get { return (GenericConfigurationElementCollection<DriveElement>)this["Drives"]; }
+            get { return Configuration["connectionstring"].Value; }
         }
 
-        [ConfigurationProperty("Exclusions")]
-        public GenericConfigurationElementCollection<ExclusionElement> Exclusions
+        public string HostName
         {
-            get { return (GenericConfigurationElementCollection<ExclusionElement>)this["Exclusions"]; }
+            get
+            {
+                return Configuration["hostname"].Value;
+            }
         }
 
-        /*
-        [ConfigurationProperty("Google")]
-        public GoogleElement GoogleDocsConfiguration
+        public int MinimumAvailableDiskspaceInGB
         {
-            get { return this[("Google")] as GoogleElement; }
-        }
-         */
-
-        [ConfigurationProperty("FtpSites")]
-        public GenericConfigurationElementCollection<FtpSiteElement> FtpSites
-        {
-            get { return (GenericConfigurationElementCollection<FtpSiteElement>)this["FtpSites"]; }
+            get { return int.Parse(Configuration["minimumavailablediskspace"].Value); }
         }
 
-        [ConfigurationProperty("Databases")]
-        public GenericConfigurationElementCollection<DatabaseElement> Databases
+        public int MinimumFilesToCleanup
         {
-            get { return (GenericConfigurationElementCollection<DatabaseElement>)this["Databases"]; }
+            get { return int.Parse(Configuration["minimalfilesforcleanup"].Value); }
         }
 
-        [ConfigurationProperty("BackupLocations")]
-        public GenericConfigurationElementCollection<DirectoryElement> BackupLocations
+        public string NameCDrive
         {
-            get { return (GenericConfigurationElementCollection<DirectoryElement>)this["BackupLocations"]; }
+            get { return Configuration["nameofcdrive"].Value.ToLowerInvariant(); }
         }
-
-        [ConfigurationProperty("ZipFiles")]
-        public GenericConfigurationElementCollection<ZipFileElement> ZipFiles
-        {
-            get { return (GenericConfigurationElementCollection<ZipFileElement>)this["ZipFiles"]; }
-        }
-
-        #endregion "app.config section implementation"
 
         /// <summary>
         /// Password waarmee de zip-files worden beveiligd
@@ -87,37 +73,7 @@ namespace MannusBackup.Configuration
             get { return bool.Parse(Configuration["test"].Value); }
         }
 
-        public string MySQLServiceName
-        {
-            get { return Configuration["mysqlservice"].Value; }
-        }
-
-        public int MinimumAvailableDiskspaceInGB
-        {
-            get { return int.Parse(Configuration["minimumavailablediskspace"].Value); }
-        }
-
-        public string ConnectionStringName
-        {
-            get { return Configuration["connectionstring"].Value; }
-        }
-
-        public int MinimumFilesToCleanup
-        {
-            get { return int.Parse(Configuration["minimalfilesforcleanup"].Value); }
-        }
-
-        public string BaseBackupDirectory
-        {
-            get { return Configuration["basebackupdirectory"].Value; }
-        }
-
-        public string NameCDrive
-        {
-            get { return Configuration["nameofcdrive"].Value.ToLowerInvariant(); }
-        }
-
-                public string ToMailAddress
+        public string ToMailAddress
         {
             get
             {
@@ -125,31 +81,11 @@ namespace MannusBackup.Configuration
             }
         }
 
-                        public string XsltMailTemplate
+        public string XsltMailTemplate
         {
             get
             {
                 return Configuration["xsltmailtemplate"].Value;
-            }
-        }
-
-        public string HostName
-        {
-            get
-            {
-                return Configuration["hostname"].Value;
-            }
-        }
-
-        public static string BackupDirectory
-        {
-            get
-            {
-                string baseDirectory = MannusBackupConfiguration.GetConfig().BaseBackupDirectory;
-                DateTime date = DateTime.Now;
-                string datum = date.ToString("ddMMMMyyyy", CultureInfo.InvariantCulture);
-                string prefix = MannusBackupConfiguration.GetConfig().HostName;
-                return string.Format(@"{0}\backup_{1}_{2}", baseDirectory,prefix,datum);
             }
         }
 
@@ -187,17 +123,56 @@ namespace MannusBackup.Configuration
             return null;
         }
 
-        public static ZipFileElement GetZipFileElement(TaskType typeOfTask, string childKey)
+        public static MannusBackupConfiguration GetConfig()
         {
-            foreach (ZipFileElement e in GetConfig().ZipFiles)
-            {
-                if (e.Type == typeOfTask && e.ChildKey.Equals(childKey))
-                {
-                    return e;
-                }
-            }
-            return null;
+            return ConfigurationManager.GetSection("MannusBackup") as MannusBackupConfiguration;
         }
+
+        #region "app.config section implementation"
+
+        [ConfigurationProperty("BackupLocations")]
+        public GenericConfigurationElementCollection<DirectoryElement> BackupLocations
+        {
+            get { return (GenericConfigurationElementCollection<DirectoryElement>)this["BackupLocations"]; }
+        }
+
+        [ConfigurationProperty("Configuration")]
+        public GenericConfigurationElementCollection<ConfigurationPropertyElement> Configuration
+        {
+            get { return (GenericConfigurationElementCollection<ConfigurationPropertyElement>)this["Configuration"]; }
+        }
+
+        [ConfigurationProperty("Databases")]
+        public GenericConfigurationElementCollection<DatabaseElement> Databases
+        {
+            get { return (GenericConfigurationElementCollection<DatabaseElement>)this["Databases"]; }
+        }
+
+        [ConfigurationProperty("Drives")]
+        public GenericConfigurationElementCollection<DriveElement> Drives
+        {
+            get { return (GenericConfigurationElementCollection<DriveElement>)this["Drives"]; }
+        }
+
+        [ConfigurationProperty("Exclusions")]
+        public GenericConfigurationElementCollection<ExclusionElement> Exclusions
+        {
+            get { return (GenericConfigurationElementCollection<ExclusionElement>)this["Exclusions"]; }
+        }
+
+        [ConfigurationProperty("FtpSites")]
+        public GenericConfigurationElementCollection<FtpSiteElement> FtpSites
+        {
+            get { return (GenericConfigurationElementCollection<FtpSiteElement>)this["FtpSites"]; }
+        }
+
+        [ConfigurationProperty("ZipFiles")]
+        public GenericConfigurationElementCollection<ZipFileElement> ZipFiles
+        {
+            get { return (GenericConfigurationElementCollection<ZipFileElement>)this["ZipFiles"]; }
+        }
+
+        #endregion "app.config section implementation"
 
         public static List<ExclusionElement> GetExclusionsForConfiguration(TaskType typeOfTask, string childKey)
         {
@@ -210,6 +185,18 @@ namespace MannusBackup.Configuration
                 }
             }
             return exclusions;
+        }
+
+        public static ZipFileElement GetZipFileElement(TaskType typeOfTask, string childKey)
+        {
+            foreach (ZipFileElement e in GetConfig().ZipFiles)
+            {
+                if (e.Type == typeOfTask && e.ChildKey.Equals(childKey))
+                {
+                    return e;
+                }
+            }
+            return null;
         }
     }
 }

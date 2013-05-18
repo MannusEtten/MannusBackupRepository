@@ -150,8 +150,7 @@ namespace MannusBackup
                 DatabaseTask databaseTask = new DatabaseTask();
                 databaseTask.SetConfiguration(sqlYogConfigurationProperties, sqlYogConfiguration.SqlYogProfileProperty);
                 databaseTasks.Add(databaseTask);
-                //!+ task maken die oude .sql-files en de session/log files opruimt
-                //!+ in configuratie opnemen dat c:\dropbox\backup wordt meegenomen in de zip-files
+                // TODO: in configuratie opnemen dat c:\dropbox\backup wordt meegenomen in de zip-files
             }
             BackupTask<DatabaseTask> databaseTaskContainer = new BackupTask<DatabaseTask>(databaseTasks, "database");
             Tasks.Add(databaseTaskContainer as IBackupTask);
@@ -162,15 +161,10 @@ namespace MannusBackup
             logger.LogDebug("add tasks");
             GenericConfigurationElementCollection<DirectoryElement> directories = MannusBackupConfiguration.GetConfig().BackupLocations;
             BackupTaskOld<DirectoryElement, XCopyTask<DirectoryElement>> task3 = new BackupTaskOld<DirectoryElement, XCopyTask<DirectoryElement>>(directories, "XCopy");
-            //GoogleElement googleDocsConfiguration = MannusBackupConfiguration.GetConfig().GoogleDocsConfiguration;
-            //            BackupTask<GoogleElement, GoogleDocsTask<GoogleElement>> googleDocsTask = new BackupTask<GoogleElement, GoogleDocsTask<GoogleElement>>(googleDocsConfiguration, "GoogleDocs");
             GenericConfigurationElementCollection<FtpSiteElement> ftpSites = MannusBackupConfiguration.GetConfig().FtpSites;
             BackupTaskOld<FtpSiteElement, WebsitesTask<FtpSiteElement>> task = new BackupTaskOld<FtpSiteElement, WebsitesTask<FtpSiteElement>>(ftpSites, "Websites");
-
             AddDatabaseTasks();
-            //! TODO: tasks aanmaken vanuit een andere class
-
-            //            Tasks.Add(googleDocsTask as IBackupTask);
+            // TODO: tasks aanmaken vanuit een andere class
             Tasks.Add(task as IBackupTask);
             Tasks.Add(task3 as IBackupTask);
         }

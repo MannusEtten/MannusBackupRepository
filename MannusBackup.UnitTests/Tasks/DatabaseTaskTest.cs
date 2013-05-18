@@ -18,11 +18,14 @@ namespace MannusBackup.UnitTests.Tasks
         [TestMethod]
         public void Execute()
         {
+            var fileNames = Directory.GetFiles(_dropboxFolder);
+            fileNames.ToList().ForEach(f => File.Delete(f));
             var task = _databaseTask;
             task.Execute();
-            var fileNames = Directory.GetFiles(_dropboxFolder);
+            fileNames = Directory.GetFiles(_dropboxFolder);
             var file = fileNames.ToList().Find(f => f.Contains("basketbalnieuws.sql"));
             Assert.IsNotNull(file);
+            Assert.AreEqual(1, fileNames.Length);
         }
 
         [TestInitialize]

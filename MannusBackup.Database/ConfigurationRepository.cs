@@ -9,11 +9,18 @@ namespace MannusBackup.Database
 {
     public class ConfigurationRepository
     {
+        private Repository _database;
         private Profile _profile;
 
         public ConfigurationRepository(Profile profile)
         {
             _profile = profile;
+            _database = new Repository();
+        }
+
+        public ConfigurationRepository()
+            : this(null)
+        {
         }
 
         public SqlYogConfiguration GetDatabaseTaskConfiguration()
@@ -24,6 +31,20 @@ namespace MannusBackup.Database
             result.Configurations = configurations;
             result.SqlYogProfileProperty = generalSqlYogProfileProperty;
             return result;
+        }
+
+        public string GetProfileConfigurationValue(IEnumerable<ProfileConfiguration> profileConfigurationProperties, ProfileSubProperties propertyName)
+        {
+            foreach (var item in profileConfigurationProperties)
+            {
+                var propertyDefinitionId = item.configurationid;
+                var configurationProperty = _database.All<ConfigurationProperty>().Where(p => p.id == propertyDefinitionId).First();
+                if (string.Equals(configurationProperty.Name, propertyName.ToString()))
+                {
+                    return item.Value;
+                }
+            }
+            return string.Empty;
         }
 
         private IEnumerable<ProfileConfigurationGroup> GetConfigurationGroups(ProfileProperties type)

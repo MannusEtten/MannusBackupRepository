@@ -12,6 +12,7 @@ namespace MannusBackup.Interfaces
         TimeOut,
         SqlYogSessionFileName,
         SqlYogJobFileName,
-        SqlYogLogFileName
+        SqlYogLogFileName,
+        BackupDirectory
     }
 }
