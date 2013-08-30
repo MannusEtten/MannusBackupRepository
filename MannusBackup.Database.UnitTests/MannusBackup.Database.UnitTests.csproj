@@ -54,7 +54,6 @@
     <Compile Include="ProfileCreatorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ConfigurationPropertyCreatorTest.cs" />
-    <Compile Include="ConfigurationRepositoryTest.cs" />
     <Compile Include="UserCreatorTest.cs" />
   </ItemGroup>
   <ItemGroup>
