@@ -71,6 +71,10 @@ namespace MannusBackup.Tasks.Tasks
             {
                 _logger.LogError(string.Format("{0} - {1}", e.Message, directory.FullName));
             }
+            catch (DirectoryNotFoundException e)
+            {
+                    _logger.LogError("directory bestaat niet '{0}'", directory.FullName);
+            }
         }
 
         internal string GetLocation(DirectoryElement element)
@@ -208,6 +212,11 @@ namespace MannusBackup.Tasks.Tasks
 
         private void RemoveReadonlyAttributeFromFilesInDirectory(DirectoryInfo directory)
         {
+            if (!directory.Exists)
+            {
+                _logger.LogError("directory bestaat niet '{0}'", directory.FullName);
+                return;
+            }
             var files = directory.GetFiles("*", SearchOption.AllDirectories);
             foreach (FileInfo file in files)
             {

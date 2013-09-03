@@ -34,6 +34,10 @@ namespace MannusBackup.UnitTests
             DirectoryInfo backupDirectory = _copier.GetLatestBackup();
             UsbDriveElement drive = MannusBackupServiceConfiguration.GetConfig().UsbDrives[0];
             string path = MannusBackupServiceConfiguration.FindDrive(drive);
+            if (string.IsNullOrEmpty(path))
+            {
+                Assert.Inconclusive();
+            }
             path = Path.Combine(path, drive.BackupDirectory);
             Assert.IsFalse(_copier.LatestBackupAtUsbDrive(path, backupDirectory));
         }

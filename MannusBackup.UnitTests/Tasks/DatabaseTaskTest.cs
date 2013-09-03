@@ -18,6 +18,10 @@ namespace MannusBackup.UnitTests.Tasks
         [TestMethod]
         public void Execute()
         {
+            if (!Directory.Exists(_dropboxFolder))
+            {
+                Assert.Inconclusive();
+            }
             var fileNames = Directory.GetFiles(_dropboxFolder);
             fileNames.ToList().ForEach(f => File.Delete(f));
             var task = _databaseTask;

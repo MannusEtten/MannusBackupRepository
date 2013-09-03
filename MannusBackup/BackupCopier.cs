@@ -131,7 +131,12 @@ namespace MannusBackup
 		{
 			_logger.LogDebug("get backup directories from {0}", directory);
 			DirectoryInfo backupDirectories = new DirectoryInfo(directory);
-			SortedList<DateTime, DirectoryInfo> backupDirectoriesNames = new SortedList<DateTime, DirectoryInfo>();
+            SortedList<DateTime, DirectoryInfo> backupDirectoriesNames = new SortedList<DateTime, DirectoryInfo>();
+            if (!Directory.Exists(directory))
+            {
+                _logger.LogError("Directory bestaat niet '{0}'", directory);
+                return backupDirectoriesNames;
+            }
 			foreach (DirectoryInfo subdir in backupDirectories.GetDirectories())
 			{
 				string subDirName = subdir.Name;
@@ -155,6 +160,10 @@ namespace MannusBackup
 		{
 			var xmlFileHandler = new BackupResultsXmlFileHandler();
 			string directoryName = xmlFileHandler.GetLatestBackup();
+            if (string.IsNullOrEmpty(directoryName))
+            {
+                return new DirectoryInfo(@"c:\");
+            }
 			return new DirectoryInfo(directoryName);
 		}
 

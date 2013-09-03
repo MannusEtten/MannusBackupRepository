@@ -41,6 +41,7 @@
           <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="groupid" Type="int" Nullable="false" />
           <Property Name="naam" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="omschrijving" Type="varchar" MaxLength="250" />
         </EntityType>
         <EntityType Name="backup_configuration_group">
           <Key>
@@ -48,6 +49,7 @@
           </Key>
           <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="naam" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="omschrijving" Type="varchar" Nullable="false" MaxLength="250" />
         </EntityType>
         <EntityType Name="backup_profile">
           <Key>
@@ -55,6 +57,7 @@
           </Key>
           <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="type" Type="enum" />
+          <Property Name="naam" Type="varchar" Nullable="false" MaxLength="50" />
         </EntityType>
         <EntityType Name="backup_profile_configuration">
           <Key>
@@ -82,6 +85,7 @@
           <Property Name="naam" Type="tinytext" Nullable="false" />
           <Property Name="waarde" Type="tinytext" Nullable="false" />
           <Property Name="profileid" Type="int" Nullable="false" />
+          <Property Name="omschrijving" Type="varchar" Nullable="false" MaxLength="250" />
         </EntityType>
         <EntityType Name="backup_results">
           <Key>
@@ -210,6 +214,7 @@
           <NavigationProperty Name="backup_profile_configuration" Relationship="MannusBackupModel.FK_configurationproperty_to_configuration" FromRole="backup_configuration" ToRole="backup_profile_configuration" />
           <Property Type="Int32" Name="groupid" Nullable="false" />
           <NavigationProperty Name="backup_configuration_group" Relationship="MannusBackupModel.FK_backup_configuration" FromRole="ConfigurationProperty" ToRole="backup_configuration_group" />
+          <Property Type="String" Name="Description" MaxLength="250" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Profile">
           <Key>
@@ -219,6 +224,7 @@
           <Property Type="String" Name="ProfileType" MaxLength="65532" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Properties" Relationship="MannusBackupModel.FK_backup_profileproperty" FromRole="backup_profile" ToRole="backup_profileproperty" />
           <NavigationProperty Name="ConfigurationGroups" Relationship="MannusBackupModel.FK_backup_profile_configuration_group" FromRole="Profile" ToRole="backup_profile_configuration_group" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="ProfileConfiguration">
           <Key>
@@ -240,6 +246,7 @@
           <Property Type="String" Name="Value" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Type="Int32" Name="profileid" Nullable="false" />
           <NavigationProperty Name="backup_profile" Relationship="MannusBackupModel.FK_backup_profileproperty" FromRole="backup_profileproperty" ToRole="backup_profile" />
+          <Property Type="String" Name="Description" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="backup_results">
           <Key>
@@ -288,8 +295,9 @@
             <PropertyRef Name="id" />
           </Key>
           <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="String" Name="naam" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="backup_configuration" Relationship="MannusBackupModel.FK_backup_configuration" FromRole="backup_configuration_group" ToRole="ConfigurationProperty" />
+          <Property Type="String" Name="Description" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_backup_configuration">
           <End Type="MannusBackupModel.ConfigurationPropertyGroup" Role="backup_configuration_group" Multiplicity="1" />
@@ -347,6 +355,7 @@
           <EntitySetMapping Name="backup_configuration">
             <EntityTypeMapping TypeName="MannusBackupModel.ConfigurationProperty">
               <MappingFragment StoreEntitySet="backup_configuration">
+                <ScalarProperty Name="Description" ColumnName="omschrijving" />
                 <ScalarProperty Name="groupid" ColumnName="groupid" />
                 <ScalarProperty Name="Name" ColumnName="naam" />
                 <ScalarProperty Name="id" ColumnName="id" />
@@ -356,6 +365,7 @@
           <EntitySetMapping Name="backup_profile">
             <EntityTypeMapping TypeName="MannusBackupModel.Profile">
               <MappingFragment StoreEntitySet="backup_profile">
+                <ScalarProperty Name="Name" ColumnName="naam" />
                 <ScalarProperty Name="ProfileType" ColumnName="type" />
                 <ScalarProperty Name="Id" ColumnName="id" />
               </MappingFragment>
@@ -374,6 +384,7 @@
           <EntitySetMapping Name="backup_profileproperty">
             <EntityTypeMapping TypeName="MannusBackupModel.ProfileProperty">
               <MappingFragment StoreEntitySet="backup_profileproperty">
+                <ScalarProperty Name="Description" ColumnName="omschrijving" />
                 <ScalarProperty Name="profileid" ColumnName="profileid" />
                 <ScalarProperty Name="Value" ColumnName="waarde" />
                 <ScalarProperty Name="Name" ColumnName="naam" />
@@ -399,7 +410,8 @@
           <EntitySetMapping Name="backup_configuration_group">
             <EntityTypeMapping TypeName="MannusBackupModel.ConfigurationPropertyGroup">
               <MappingFragment StoreEntitySet="backup_configuration_group">
-                <ScalarProperty Name="naam" ColumnName="naam" />
+                <ScalarProperty Name="Description" ColumnName="omschrijving" />
+                <ScalarProperty Name="Name" ColumnName="naam" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>

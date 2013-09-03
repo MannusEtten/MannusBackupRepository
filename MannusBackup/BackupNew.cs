@@ -84,6 +84,12 @@ namespace MannusBackup
 
         public long GetSize()
         {
+            var directoryPath = MannusBackupConfiguration.BackupDirectory;
+            if (!Directory.Exists(directoryPath))
+            {
+                logger.LogError("Pad naar directory bestaat niet '{0}'", directoryPath);
+                return 0;
+            }
             FileInfo[] files = new DirectoryInfo(MannusBackupConfiguration.BackupDirectory).GetFiles();
             long result = 0;
             foreach (FileInfo f in files)
@@ -169,23 +175,6 @@ namespace MannusBackup
             Tasks.Add(task3 as IBackupTask);
         }
 
-        internal void DatabaseStarted(object sender, TaskFinishedEventArgs e)
-        {
-            GenericConfigurationElementCollection<DatabaseElement> databases = MannusBackupConfiguration.GetConfig().Databases;
-            foreach (DatabaseElement database in databases)
-            {
-                bool removeTask = TestDatabase(database);
-                if (removeTask)
-                {
-                    string name = string.Format("Database - {0}", database.Key);
-                    var item = from task in Tasks
-                               where task.TaskName.Equals(name)
-                               select task;
-                    Tasks.Remove(item.First());
-                }
-            }
-        }
-
         private string CreateMessage(List<string> messages)
         {
             StringBuilder builder = new StringBuilder();
@@ -231,34 +220,6 @@ namespace MannusBackup
                 {
                     BackupIsFinished(this, new BackupFinishedEventArgs());
                 }
-            }
-        }
-
-        private bool TestDatabase(DatabaseElement database)
-        {
-            string connectionString = "Server={0};Database={1};Uid={2};Pwd={3}";
-            connectionString = string.Format(connectionString, database.Host, database.Database, database.UserName, database.Password);
-            try
-            {
-                logger.LogDebug(connectionString);
-                string commandText = "SELECT COUNT(*) AS number_of_tables FROM information_schema.tables;";
-                using (MySqlConnection connection = new MySqlConnection(connectionString))
-                {
-                    using (MySqlCommand command = new MySqlCommand(commandText, connection))
-                    {
-                        if (connection.State != ConnectionState.Open)
-                        {
-                            connection.Open();
-                        }
-                        int result = int.Parse(command.ExecuteScalar().ToString());
-                        return (result == 0);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.LogException(ex);
-                return true;
             }
         }
     }

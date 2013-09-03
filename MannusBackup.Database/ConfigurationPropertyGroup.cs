@@ -20,7 +20,8 @@ namespace MannusBackup.Database
         }
     
         public int id { get; set; }
-        public string naam { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
     
         public virtual ICollection<ConfigurationProperty> backup_configuration { get; set; }
     }

@@ -37,6 +37,11 @@ namespace MannusBackup.BackupResults
         {
             string baseDirectory = MannusBackupServiceConfiguration.GetConfig().BaseBackupDirectory;
             var filename = GetBackupResultsXmlFileName(baseDirectory);
+            if (!File.Exists(filename))
+            {
+                _logger.LogError("backup results file niet gevonden in '{0}'", filename);
+                return null;
+            }
             XElement xmlDocument = XElement.Load(filename);
             var directory = xmlDocument.Elements("resultaat").Where(e => e.Element("status").Value == "afgerond").Last();
             return directory.Element("naam").Value;

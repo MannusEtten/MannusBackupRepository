@@ -1,6 +1,9 @@
-﻿using MannusBackup.Configuration;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using MannusBackup.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
+using System.Linq;
 namespace MannusBackup.UnitTests
 {
     /// <summary>
@@ -29,7 +32,8 @@ namespace MannusBackup.UnitTests
         public void BackupDirectory_Name_Does_Not_Contain_Dutch_MonthNames()
         {
             string backupDirectory = MannusBackupConfiguration.BackupDirectory;
-            StringAssert.Contains(backupDirectory, "February");
+            DateTimeFormatInfo dtfi = CultureInfo.InvariantCulture.DateTimeFormat;
+            Assert.IsTrue(dtfi.MonthNames.Any(mn => backupDirectory.Contains(mn)));
         }
 
         [TestMethod]

@@ -10,9 +10,9 @@ namespace MannusBackup.UnitTests
         [TestMethod]
         public void Backup_Is_Succesfull()
         {
-//            Assert.Inconclusive();
-            BackupNew backuper = new BackupNew();
-            backuper.Backup();
+            Assert.Inconclusive();
+            //BackupNew backuper = new BackupNew();
+            //backuper.Backup();
         }
 
         [TestMethod]
@@ -39,14 +39,6 @@ namespace MannusBackup.UnitTests
             xmlMessages.Add("c");
             xmlMessages.Add("d");
             backuper.WriteMessagesToXmlFile(xmlMessages);
-        }
-
-        [TestMethod]
-        public void DatabaseStarted_Test()
-        {
-            BackupNew backuper = new BackupNew();
-            backuper.AddTasks();
-            backuper.DatabaseStarted(null, null);
         }
 
         [TestMethod]

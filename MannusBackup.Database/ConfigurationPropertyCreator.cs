@@ -8,6 +8,7 @@ namespace MannusBackup.Database
 {
     public class ConfigurationPropertyCreator : CreatorBase
     {
+        [Obsolete("niet gebruiken")]
         public void CreateConfigurationProperty(string name)
         {
             var configurationProperty = new ConfigurationProperty();

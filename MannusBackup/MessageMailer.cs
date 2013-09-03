@@ -1,4 +1,5 @@
-﻿using System.Net.Mail;
+﻿using System;
+using System.Net.Mail;
 using ESRINederland.Framework.Logging;
 
 namespace MannusBackup
@@ -16,6 +17,7 @@ namespace MannusBackup
         /// <param name="message">Inhoud</param>
         public static void SendMessage(string emailaddress, string title, string message)
         {
+            ILogger logger = Logger.GetLogger();
             MailMessage mailmessage = new MailMessage();
             mailmessage.Body = message;
             mailmessage.From = new MailAddress("mannusbackup@mannus.nl", "MannusBackup");
@@ -28,9 +30,12 @@ namespace MannusBackup
             {
                 client.Send(mailmessage);
             }
+            catch(InvalidOperationException e)
+            {
+                logger.LogException(e);
+            }
             catch (SmtpException e)
             {
-                ILogger logger = Logger.GetLogger();
                 logger.LogException(e);
             }
         }

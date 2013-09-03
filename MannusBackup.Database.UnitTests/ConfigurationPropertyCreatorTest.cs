@@ -17,6 +17,7 @@ namespace MannusBackup.Database.UnitTests
         [TestMethod]
         public void CreateConfigurationProperty()
         {
+            Assert.Inconclusive();
             _creator.CreateConfigurationProperty("SqlYog");
         }
     }

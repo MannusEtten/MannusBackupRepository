@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="1960b912b4264c399db0f50d5b599ce3" Name="Diagram1" ZoomLevel="105">
+      <Diagram DiagramId="1960b912b4264c399db0f50d5b599ce3" Name="Diagram1" ZoomLevel="85">
         <EntityTypeShape EntityType="MannusBackupModel.ConfigurationProperty" Width="2.5" PointX="20.625" PointY="6.25" />
         <EntityTypeShape EntityType="MannusBackupModel.Profile" Width="2.375" PointX="27.5" PointY="9.5" />
         <EntityTypeShape EntityType="MannusBackupModel.ProfileConfiguration" Width="2.75" PointX="20" PointY="9.5" />

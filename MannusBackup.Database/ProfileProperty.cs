@@ -18,6 +18,7 @@ namespace MannusBackup.Database
         public string Name { get; set; }
         public string Value { get; set; }
         public int profileid { get; set; }
+        public string Description { get; set; }
     
         public virtual Profile backup_profile { get; set; }
     }

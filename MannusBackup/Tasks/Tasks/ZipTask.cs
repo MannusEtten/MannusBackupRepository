@@ -34,6 +34,11 @@ namespace MannusBackup.Tasks.Tasks
 
         private void CreateZipFileForAllDirectories(string directoryToZip, string zipFileName)
         {
+            if (!Directory.Exists(directoryToZip))
+            {
+                _logger.LogError("Directory om te zippen bestaat niet '{0}'", directoryToZip);
+                return;
+            }
             if (File.Exists(zipFileName))
             {
                 try
