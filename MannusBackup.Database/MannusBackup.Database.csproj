@@ -111,13 +111,11 @@
     <Compile Include="UserCreator.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config">
-      <SubType>Designer</SubType>
-    </None>
     <EntityDeploy Include="MannusBackupEntities.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>MannusBackupEntities.Designer.cs</LastGenOutput>
     </EntityDeploy>
+    <None Include="App.config" />
     <None Include="MannusBackupEntities.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>MannusBackupEntities.edmx</DependentUpon>

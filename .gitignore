@@ -167,3 +167,13 @@ pip-log.txt
 /MannusBackup.Database/MannusBackup.Database.csproj.user
 
 MannusBackupWebservice/Bin/MannusBackup.Database.pdb
+/MannusBackup.Database/*.config
+/MannusBackup.Database.UnitTests/App.config
+/MannusBackupFtpIndexer/*.config
+/MannusBackupService/App.config
+/MannusBackupWebsite/web.Debug.config
+/MannusBackupWebsite/web.Release.config
+/MannusBackupWebsite/web.config
+/OutLookBackupPrepareTool/App.config
+/MannusBackupApplication/App.config
+/MannusBackup.UnitTests/App.config
